@@ -35,74 +35,7 @@
 </head>
 <body class="bg-gray-50 text-gray-800">
     <div class="flex h-screen overflow-hidden">
-        <!-- Sidebar -->
-        <aside class="hidden md:flex md:flex-shrink-0">
-            <div class="flex flex-col w-64 border-r border-gray-200 bg-white">
-            <!-- Sidebar Header -->
-            <div class="flex items-center justify-center h-16 px-4 border-b border-gray-200">
-                <div class="flex items-center space-x-2">
-                <div class="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center">
-                    <i class="fas fa-om text-gray-600"></i>
-                </div>
-                <span class="font-bold text-lg">MyPoojaPandit</span>
-                </div>
-            </div>
-            
-            <!-- Sidebar Content -->
-            <div class="flex-1 overflow-y-auto py-4">
-                <nav class="flex flex-col space-y-2 px-4">
-                <a href="{{ route('admin.dashboard') }}" class="sidebar-link {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
-                    <i class="fas fa-home w-5"></i>
-                    <span>Dashboard</span>
-                </a>
-                <a href="{{ route('admin.users') }}" class="sidebar-link {{ request()->routeIs('admin.users*') ? 'active' : '' }}">
-                    <i class="fas fa-users w-5"></i>
-                    <span>Users</span>
-                </a>
-                <a href="{{ route('admin.services') }}" class="sidebar-link {{ request()->routeIs('admin.services*') ? 'active' : '' }}">
-                    <i class="fas fa-concierge-bell"></i>
-                    <span>Services</span>
-                </a>
-                <a href="{{ route('admin.pandits') }}" class="sidebar-link {{ request()->routeIs('admin.pandits*') ? 'active' : '' }}">
-                    <i class="fas fa-user-tie w-5"></i>
-                    <span>Pandits</span>
-                </a>
-                <a href="{{ route('admin.temples') }}" class="sidebar-link {{ request()->routeIs('admin.temples*') ? 'active' : '' }}">
-                    <i class="fas fa-place-of-worship w-5"></i>
-                    <span>Temples</span>
-                </a>
-                <a href="{{ route('admin.bookings') }}" class="sidebar-link {{ request()->routeIs('admin.bookings*') ? 'active' : '' }}">
-                    <i class="fas fa-calendar-check w-5"></i>
-                    <span>Bookings</span>
-                </a>
-                <a href="{{ route('admin.products') }}" class="sidebar-link {{ request()->routeIs('admin.products*') ? 'active' : '' }}">
-                    <i class="fas fa-box w-5"></i>
-                    <span>Products</span>
-                </a>
-                <a href="{{ route('admin.orders') }}" class="sidebar-link {{ request()->routeIs('admin.orders*') ? 'active' : '' }}">
-                    <i class="fas fa-shopping-cart w-5"></i>
-                    <span>Orders</span>
-                </a>
-               
-                <a href="{{ route('admin.blogs') }}" class="sidebar-link {{ request()->routeIs('admin.blogs*') ? 'active' : '' }}">
-                    <i class="fas fa-blog"></i>
-                    <span>Blogs</span>
-                </a>
-                </nav>
-            </div>
-            
-            <!-- Sidebar Footer -->
-            <div class="p-4 border-t border-gray-200">
-                <form method="POST" action="{{ route('admin.logout') }}">
-                    @csrf
-                    <button type="submit" class="sidebar-link text-gray-700 w-full text-left">
-                        <i class="fas fa-sign-out-alt w-5"></i>
-                        <span>Logout</span>
-                    </button>
-                </form>
-            </div>
-            </div>
-        </aside>
+
 
         <!-- Main Content -->
         <div class="flex flex-col flex-1 overflow-hidden">

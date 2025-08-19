@@ -3,145 +3,93 @@
 @section('title', 'Add Temple')
 
 @section('content')
-<div class="max-w-4xl mx-auto">
-    <div class="bg-white shadow rounded-lg">
-        <div class="px-6 py-4 border-b border-gray-200">
-            <h2 class="text-xl font-semibold text-gray-800">Add New Temple</h2>
+<div class="max-w-4xl mx-auto bg-white font-sans">
+  
+    <div class="flex bg-white font-sans">
+
+        <!-- Left Side Image -->
+        <div class="hidden md:block w-1/2 bg-orange-500 relative">
+            <img src="https://source.unsplash.com/800x1200/?temple,india" 
+                 alt="Temple Image" 
+                 class="w-full h-full object-cover mix-blend-overlay opacity-90">
         </div>
-        
-        <form action="{{ route('admin.temples.store') }}" method="POST" enctype="multipart/form-data" class="p-6 space-y-6">
-            @csrf
+
+        <!-- Right Side Form -->
+        <div class="w-full md:w-1/2 flex flex-col justify-center px-8 md:px-16 lg:px-24 py-10">
             
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                    <label for="name" class="block text-sm font-medium text-gray-700">Temple Name</label>
-                    <input type="text" name="name" id="name" value="{{ old('name') }}" 
-                           class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500" 
-                           required>
-                    @error('name')
-                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                    @enderror
+            <!-- Go Back -->
+            <a href="{{ url('/admin/temples') }}" class="text-orange-500 text-sm mb-6 flex items-center">
+                ← Go Back
+            </a>
+            <h2 class="text-2xl font-bold text-orange-600 mb-6">Add New Temple</h2>
+
+            <!-- Form -->
+            <form action="#" method="POST" enctype="multipart/form-data" class="space-y-5">
+                @csrf
+
+                <!-- Temple Images -->
+                <div class="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center cursor-pointer hover:border-orange-500">
+                    <label for="images" class="cursor-pointer">
+                        <div class="flex flex-col items-center justify-center text-gray-500">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-10 h-10 mb-2 text-orange-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                                    d="M3 15a4 4 0 014-4h10a4 4 0 014 4m-6-4v-2a2 2 0 10-4 0v2m-6 4h12" />
+                            </svg>
+                            <p class="text-sm">Click to upload images</p>
+                            <p class="text-xs text-gray-400">PNG, JPG up to 5MB (Max. 5 images)</p>
+                        </div>
+                        <input id="images" type="file" name="images[]" multiple class="hidden" accept="image/*">
+                    </label>
                 </div>
-                
-                <div>
-                    <label for="deity" class="block text-sm font-medium text-gray-700">Deity</label>
-                    <input type="text" name="deity" id="deity" value="{{ old('deity') }}" 
-                           class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500">
-                    @error('deity')
-                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                    @enderror
+
+                <!-- Temple Name -->
+                <input type="text" name="name" placeholder="Enter the temple name"
+                       class="w-full border rounded-md px-4 py-2 focus:ring-2 focus:ring-orange-400 outline-none">
+
+                <!-- Short Description -->
+                <textarea name="short_description" rows="2" placeholder="Enter the short Description"
+                          class="w-full border rounded-md px-4 py-2 focus:ring-2 focus:ring-orange-400 outline-none"></textarea>
+
+                <!-- Location -->
+                <input type="text" name="location" placeholder="Enter the location"
+                       class="w-full border rounded-md px-4 py-2 focus:ring-2 focus:ring-orange-400 outline-none">
+
+                <!-- Package Section -->
+                <div class="grid grid-cols-2 gap-4">
+                    <input type="text" name="package[]" placeholder="Enter the package"
+                           class="w-full border rounded-md px-4 py-2 focus:ring-2 focus:ring-orange-400 outline-none">
+                    <input type="text" name="price[]" placeholder="Enter the Amount"
+                           class="w-full border rounded-md px-4 py-2 focus:ring-2 focus:ring-orange-400 outline-none">
                 </div>
-            </div>
-            
-            <div>
-                <label for="description" class="block text-sm font-medium text-gray-700">Description</label>
-                <textarea name="description" id="description" rows="4" 
-                          class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500">{{ old('description') }}</textarea>
-                @error('description')
-                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                @enderror
-            </div>
-            
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                    <label for="location" class="block text-sm font-medium text-gray-700">Location</label>
-                    <input type="text" name="location" id="location" value="{{ old('location') }}" 
-                           class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500" 
-                           required>
-                    @error('location')
-                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                    @enderror
-                </div>
-                
-                <div>
-                    <label for="timings" class="block text-sm font-medium text-gray-700">Timings</label>
-                    <input type="text" name="timings" id="timings" value="{{ old('timings') }}" 
-                           placeholder="e.g., 6:00 AM - 9:00 PM"
-                           class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500">
-                    @error('timings')
-                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                    @enderror
-                </div>
-            </div>
-            
-            <div>
-                <label for="address" class="block text-sm font-medium text-gray-700">Address</label>
-                <textarea name="address" id="address" rows="3" 
-                          class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500" 
-                          required>{{ old('address') }}</textarea>
-                @error('address')
-                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                @enderror
-            </div>
-            
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div>
-                    <label for="phone" class="block text-sm font-medium text-gray-700">Phone</label>
-                    <input type="tel" name="phone" id="phone" value="{{ old('phone') }}" 
-                           class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500">
-                    @error('phone')
-                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                    @enderror
-                </div>
-                
-                <div>
-                    <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
-                    <input type="email" name="email" id="email" value="{{ old('email') }}" 
-                           class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500">
-                    @error('email')
-                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                    @enderror
-                </div>
-                
-                <div>
-                    <label for="entry_fee" class="block text-sm font-medium text-gray-700">Entry Fee (₹)</label>
-                    <input type="number" name="entry_fee" id="entry_fee" value="{{ old('entry_fee', 0) }}" step="0.01" min="0"
-                           class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500">
-                    @error('entry_fee')
-                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                    @enderror
-                </div>
-            </div>
-            
-            <div>
-                <label for="website" class="block text-sm font-medium text-gray-700">Website</label>
-                <input type="url" name="website" id="website" value="{{ old('website') }}" 
-                       placeholder="https://example.com"
-                       class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500">
-                @error('website')
-                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                @enderror
-            </div>
-            
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                    <label for="latitude" class="block text-sm font-medium text-gray-700">Latitude</label>
-                    <input type="number" name="latitude" id="latitude" value="{{ old('latitude') }}" step="0.000001" 
-                           class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500">
-                    @error('latitude')
-                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                    @enderror
-                </div>
-                
-                <div>
-                    <label for="longitude" class="block text-sm font-medium text-gray-700">Longitude</label>
-                    <input type="number" name="longitude" id="longitude" value="{{ old('longitude') }}" step="0.000001" 
-                           class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500">
-                    @error('longitude')
-                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                    @enderror
-                </div>
-            </div>
-            
-            <div class="flex items-center justify-end space-x-4">
-                <a href="{{ route('admin.temples') }}" class="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50">
-                    Cancel
-                </a>
-                <button type="submit" class="btn-gradient text-white px-6 py-2 rounded-md hover:opacity-90">
+                <button type="button" 
+                        class="text-orange-500 text-sm hover:underline">+ Add package</button>
+
+                <!-- Overall Description -->
+                <textarea name="overall_description" rows="3" placeholder="Enter the overall Description"
+                          class="w-full border rounded-md px-4 py-2 focus:ring-2 focus:ring-orange-400 outline-none"></textarea>
+
+                <!-- Visiting Information -->
+                <input type="text" name="visiting_info" placeholder="Enter the Visiting Information"
+                       class="w-full border rounded-md px-4 py-2 focus:ring-2 focus:ring-orange-400 outline-none">
+
+                <!-- Facilities & Amenities -->
+                <input type="text" name="facilities" placeholder="Enter the Facilities & Amenities"
+                       class="w-full border rounded-md px-4 py-2 focus:ring-2 focus:ring-orange-400 outline-none">
+
+                <!-- Add Pandit -->
+                <p class="text-xs text-gray-500">
+                    To add a Pandit who is available inside the temple, click the ‘Add Pandit’ button.
+                </p>
+                <a href="{{ url('/pandits/create') }}" class="text-orange-500 text-sm hover:underline">+ Pandit</a>
+
+                <!-- Submit -->
+                <button type="submit" 
+                        class="w-full bg-indigo-900 text-white py-3 rounded-full hover:bg-indigo-800 transition">
                     Add Temple
                 </button>
-            </div>
-        </form>
+            </form>
+        </div>
     </div>
+
 </div>
 @endsection

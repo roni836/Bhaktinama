@@ -5,155 +5,99 @@
 @section('content')
 
 
-    {{-- ✅ Success Message --}}
-    @if (session('success'))
-        <div class="mb-4 p-4 bg-green-100 border border-green-400 text-green-700 rounded">
-            {{ session('success') }}
-        </div>
-    @endif
+{{-- ✅ Success Message --}}
+@if (session('success'))
+<div class="mb-4 p-4 bg-green-100 border border-green-400 text-green-700 rounded">
+    {{ session('success') }}
+</div>
+@endif
 
-    {{-- ✅ Error Messages --}}
-    @if ($errors->any())
-        <div class="mb-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded">
-            <ul class="list-disc pl-5">
-                @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
-    @endif
-    <div class="mb-6">
-        <div class="flex items-center space-x-2">
-            <a href="{{ route('admin.dashboard') }}" class="text-gray-600 hover:text-orange-500">
-                <i class="fas fa-arrow-left"></i> Go Back
-            </a>
-        </div>
-        <h1 class="text-2xl font-bold text-gray-900 mt-4">Add New Pandit</h1>
+{{-- ✅ Error Messages --}}
+@if ($errors->any())
+<div class="mb-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded">
+    <ul class="list-disc pl-5">
+        @foreach ($errors->all() as $error)
+        <li>{{ $error }}</li>
+        @endforeach
+    </ul>
+</div>
+@endif
+
+
+<div class="flex min-h-screen">
+    <div class="hidden md:block w-1/2 bg-orange-500 relative">
+        <img src="https://source.unsplash.com/600x800/?indian,old-man"
+            alt="Pandit Image"
+            class="w-full h-full object-cover mix-blend-overlay opacity-90">
     </div>
+    <div class="w-full md:w-1/2 flex flex-col justify-center px-8 md:px-16 lg:px-24">
 
-    <div class="bg-white shadow rounded-lg overflow-hidden">
-        <form action="{{ route('admin.pandits.store') }}" method="POST" enctype="multipart/form-data" class="p-6">
+        <a href="{{ url('/pandits') }}" class="text-orange-500 text-sm mb-6 flex items-center">
+            ← Go Back
+        </a>
+
+        <!-- Title -->
+        <h2 class="text-2xl font-bold text-orange-600 mb-6">Add New Pandit</h2>
+
+        <!-- Form -->
+        <form action="#" method="POST" enctype="multipart/form-data" class="space-y-5">
             @csrf
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div class="md:col-span-2">
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Pandit Images</label>
-                    <div class="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
-                        <div class="flex justify-center">
-                            <div class="text-orange-500">
-                                <i class="fas fa-image text-3xl"></i>
-                            </div>
-                        </div>
-                        <p class="mt-2 text-sm text-gray-600">Click to upload images</p>
-                        <p class="text-xs text-gray-500">PNG, JPG up to 5MB (Max. 5 images)</p>
-                        <input type="file" name="profile_image" multiple class="hidden" id="pandit-images">
+
+            <!-- Image Upload -->
+            <div class="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center cursor-pointer hover:border-orange-500">
+                <label for="images" class="cursor-pointer">
+                    <div class="flex flex-col items-center justify-center text-gray-500">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-10 h-10 mb-2 text-orange-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M3 15a4 4 0 014-4h10a4 4 0 014 4m-6-4v-2a2 2 0 10-4 0v2m-6 4h12" />
+                        </svg>
+                        <p class="text-sm">Click to upload images</p>
+                        <p class="text-xs text-gray-400">PNG, JPG up to 5MB (Max. 5 images)</p>
                     </div>
-                </div>
-
-                <div>
-                    <label for="pandit_name" class="block text-sm font-medium text-gray-700 mb-2">Pandit Name</label>
-                    <input type="text" id="pandit_name" name="name" placeholder="Enter the pandit name"
-                        class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-orange-500">
-                </div>
-
-                <div>
-                    <label for="specialized_in" class="block text-sm font-medium text-gray-700 mb-2">Specialized In</label>
-                    <input type="text" id="specialized_in" name="specialization" placeholder="Enter the skills"
-                        class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-orange-500">
-                </div>
-
-                <!-- Location (State Dropdown) -->
-                <div>
-                    <label for="location" class="block text-sm font-medium text-gray-700 mb-2">Location (State)</label>
-                    <select id="location" name="location" required
-                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500">
-                        <option value="">Select a State</option>
-                        @foreach ($states as $state)
-                            <option value="{{ $state }}" {{ old('location') == $state ? 'selected' : '' }}>
-                                {{ $state }}
-                            </option>
-                        @endforeach
-                    </select>
-                    @error('location')
-                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-                    @enderror
-                </div>
-
-
-
-                <div>
-                    <label for="phone" class="block text-sm font-medium text-gray-700 mb-2">Phone Number</label>
-                    <input type="text" id="phone" name="phone" placeholder="Enter phone number"
-                        class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-orange-500">
-                </div>
-
-                <div>
-                    <label for="email" class="block text-sm font-medium text-gray-700 mb-2">Email Address</label>
-                    <input type="email" id="email" name="email" placeholder="Enter email address"
-                        class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-orange-500">
-                </div>
-
-                <div>
-                    <label for="experience" class="block text-sm font-medium text-gray-700 mb-2">Years of Experience</label>
-                    <input type="number" id="experience" name="experience" placeholder="Enter years of experience"
-                        class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-orange-500">
-                </div>
-
-                <div class="md:col-span-2">
-                    <label for="description" class="block text-sm font-medium text-gray-700 mb-2">Description</label>
-                    <textarea id="description" name="description" rows="4" placeholder="Enter the description"
-                        class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-orange-500"></textarea>
-                </div>
-
-                <div class="md:col-span-2">
-                    <label for="services" class="block text-sm font-medium text-gray-700 mb-2">Services Offered</label>
-                    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-                        <div class="flex items-center">
-                            <input type="checkbox" id="service_1" name="services[]" value="Griha Pravesh"
-                                class="h-4 w-4 text-orange-500 border-gray-300 rounded focus:ring-orange-500">
-                            <label for="service_1" class="ml-2 text-sm text-gray-700">Griha Pravesh</label>
-                        </div>
-                        <div class="flex items-center">
-                            <input type="checkbox" id="service_2" name="services[]" value="Satyanarayan Puja"
-                                class="h-4 w-4 text-orange-500 border-gray-300 rounded focus:ring-orange-500">
-                            <label for="service_2" class="ml-2 text-sm text-gray-700">Satyanarayan Puja</label>
-                        </div>
-                        <div class="flex items-center">
-                            <input type="checkbox" id="service_3" name="services[]" value="Vastu Shanti"
-                                class="h-4 w-4 text-orange-500 border-gray-300 rounded focus:ring-orange-500">
-                            <label for="service_3" class="ml-2 text-sm text-gray-700">Vastu Shanti</label>
-                        </div>
-                        <div class="flex items-center">
-                            <input type="checkbox" id="service_4" name="services[]" value="Ganesh Puja"
-                                class="h-4 w-4 text-orange-500 border-gray-300 rounded focus:ring-orange-500">
-                            <label for="service_4" class="ml-2 text-sm text-gray-700">Ganesh Puja</label>
-                        </div>
-                        <div class="flex items-center">
-                            <input type="checkbox" id="service_5" name="services[]" value="Kaal Sarp Dosh Nivaran"
-                                class="h-4 w-4 text-orange-500 border-gray-300 rounded focus:ring-orange-500">
-                            <label for="service_5" class="ml-2 text-sm text-gray-700">Kaal Sarp Dosh Nivaran</label>
-                        </div>
-                        <div class="flex items-center">
-                            <input type="checkbox" id="service_6" name="services[]" value="Navgraha Shanti"
-                                class="h-4 w-4 text-orange-500 border-gray-300 rounded focus:ring-orange-500">
-                            <label for="service_6" class="ml-2 text-sm text-gray-700">Navgraha Shanti</label>
-                        </div>
-                    </div>
-                </div>
+                    <input id="images" type="file" name="images[]" multiple class="hidden" accept="image/*">
+                </label>
             </div>
 
-            <div class="mt-8">
-                <button type="submit"
-                    class="w-full md:w-auto bg-gray-900 hover:bg-gray-700 text-white font-semibold py-3 px-8 rounded-lg shadow-lg transition duration-300">
-                    Add Pandit
-                </button>
+            <!-- Pandit Name -->
+            <div>
+                <input type="text" name="name" placeholder="Enter the temple name"
+                    class="w-full border rounded-md px-4 py-2 focus:ring-2 focus:ring-orange-400 outline-none">
             </div>
+
+            <!-- Specialized In -->
+            <div>
+                <input type="text" name="skills" placeholder="Enter the Skills"
+                    class="w-full border rounded-md px-4 py-2 focus:ring-2 focus:ring-orange-400 outline-none">
+            </div>
+
+            <!-- Location -->
+            <div>
+                <input type="text" name="location" placeholder="Enter the location"
+                    class="w-full border rounded-md px-4 py-2 focus:ring-2 focus:ring-orange-400 outline-none">
+            </div>
+
+            <!-- Description -->
+            <div>
+                <textarea name="description" rows="3" placeholder="Enter the Description"
+                    class="w-full border rounded-md px-4 py-2 focus:ring-2 focus:ring-orange-400 outline-none"></textarea>
+            </div>
+
+            <!-- Submit Button -->
+            <button type="submit"
+                class="w-full bg-indigo-900 text-white py-3 rounded-full hover:bg-indigo-800 transition">
+                Add Pandit
+            </button>
         </form>
     </div>
 
-    <script>
-        // Handle image upload preview
-        document.querySelector('.border-dashed').addEventListener('click', function() {
-            document.getElementById('pandit-images').click();
-        });
-    </script>
+</div>
+
+
+
+<script>
+    // Handle image upload preview
+    document.querySelector('.border-dashed').addEventListener('click', function() {
+        document.getElementById('pandit-images').click();
+    });
+</script>
 @endsection

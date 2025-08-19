@@ -67,20 +67,20 @@ Route::post('/adminlogin', [AdminController::class, 'login'])->name('admin.login
 //     Route::get('/bookings', [AdminController::class, 'bookings'])->name('bookings');
 //     Route::patch('/bookings/{id}/status', [AdminController::class, 'updateBookingStatus'])->name('bookings.update-status');
     
-//     // Pandit Management
-//     Route::get('/pandits', [AdminController::class, 'pandits'])->name('pandits');
-//     Route::get('/pandits/create', [AdminController::class, 'createPandit'])->name('pandits.create');
-//     Route::post('/pandits', [AdminController::class, 'storePandit'])->name('pandits.store');
-//     Route::patch('/pandits/{id}/toggle-status', [AdminController::class, 'togglePanditStatus'])->name('pandits.toggle-status');
+    // Pandit Management
+    Route::get('/pandits', [AdminController::class, 'pandits'])->name('pandits');
+    Route::get('/pandits/create', [AdminController::class, 'createPandit'])->name('pandits.create');
+    Route::post('/pandits', [AdminController::class, 'storePandit'])->name('pandits.store');
+    Route::patch('/pandits/{id}/toggle-status', [AdminController::class, 'togglePanditStatus'])->name('pandits.toggle-status');
     
-//     // Temple Management
-//     Route::get('/temples', [AdminController::class, 'temples'])->name('temples');
-//     Route::get('/temples/create', [AdminController::class, 'createTemple'])->name('temples.create');
-//     Route::post('/temples', [AdminController::class, 'storeTemple'])->name('temples.store');
-//     Route::get('/temples/{id}/edit', [AdminController::class, 'editTemple'])->name('temples.edit');
-//     Route::put('/temples/{id}', [AdminController::class, 'updateTemple'])->name('temples.update');
-//     Route::delete('/temples/{id}', [AdminController::class, 'deleteTemple'])->name('temples.delete');
-//     Route::patch('/temples/{id}/toggle-status', [AdminController::class, 'toggleTempleStatus'])->name('temples.toggle-status');
+    // Temple Management
+    Route::get('/temples', [AdminController::class, 'temples'])->name('temples');
+    Route::get('/temples/create', [AdminController::class, 'createTemple'])->name('temples.create');
+    Route::post('/temples', [AdminController::class, 'storeTemple'])->name('temples.store');
+    Route::get('/temples/{id}/edit', [AdminController::class, 'editTemple'])->name('temples.edit');
+    Route::put('/temples/{id}', [AdminController::class, 'updateTemple'])->name('temples.update');
+    Route::delete('/temples/{id}', [AdminController::class, 'deleteTemple'])->name('temples.delete');
+    Route::patch('/temples/{id}/toggle-status', [AdminController::class, 'toggleTempleStatus'])->name('temples.toggle-status');
     
 //     // Product Management
 //     Route::get('/products', [AdminController::class, 'products'])->name('products');

@@ -18,7 +18,7 @@
 </head>
 <body class="bg-gray-100">
     <div class="flex h-screen">
-        <!-- Sidebar -->
+      
         <div class="bg-gray-900 text-white w-64 flex-shrink-0 hidden md:block">
             <div class="p-4 flex items-center border-b border-gray-800">
                 <span class="text-xl font-bold">MyPoojaPandit</span>
