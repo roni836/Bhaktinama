@@ -91,10 +91,10 @@
                 </div>
 
                 <!-- Google Login -->
-                <button class="w-full flex items-center justify-center space-x-3 px-4 py-3 rounded-full border border-gray-300 hover:bg-gray-50 transition duration-300 shadow-sm">
+                <a href="{{ route('google.login') }}" class="w-full flex items-center justify-center space-x-3 px-4 py-3 rounded-full border border-gray-300 hover:bg-gray-50 transition duration-300 shadow-sm">
                     <img src="https://www.google.com/favicon.ico" alt="Google icon" class="w-5 h-5">
                     <span class="text-gray-700 font-medium">Google</span>
-                </button>
+                </a>
 
                 <!-- Signup -->
                 <p class="text-center text-gray-600 text-sm mt-8">
