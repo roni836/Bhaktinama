@@ -11,38 +11,38 @@ use App\Http\Controllers\PanditController;
 
 
 
-Route::get('/aa',[PanditController::class,'aa'])->name("aa");
-Route::get('/curent',[PanditController::class,'current'])->name("curent");
+Route::get('/aa', [PanditController::class, 'aa'])->name("aa");
+Route::get('/curent', [PanditController::class, 'current'])->name("curent");
 
 // Frontend Routes
-Route::get('/',[UserController::class,'index'])->name("homepage");
-Route::get('/services',[UserController::class,'services'])->name("services");
-Route::get('/shop',[UserController::class,'shop'])->name("shop");
-Route::get('/about',[UserController::class,'about'])->name("about");
-Route::get('/blog',[UserController::class,'blog'])->name("blog");
-Route::get('/contact',[UserController::class,'contact'])->name("contact");
+Route::get('/', [UserController::class, 'index'])->name("homepage");
+Route::get('/services', [UserController::class, 'services'])->name("services");
+Route::get('/shop', [UserController::class, 'shop'])->name("shop");
+Route::get('/about', [UserController::class, 'about'])->name("about");
+Route::get('/blog', [UserController::class, 'blog'])->name("blog");
+Route::get('/contact', [UserController::class, 'contact'])->name("contact");
 // Route::get('/login',[UserController::class,'login'])->name("login");
-Route::get('/register',[UserController::class,'register'])->name("register");
+// Route::get('/register',[UserController::class,'register'])->name("register");
 // Route::get('/adminlogin',[UserController::class,'adminlogin'])->name("adminlogin");
 // Route::get('/panditlogin',[UserController::class,'panditlogin'])->name("panditlogin");
-Route::get('/panditregister',[UserController::class,'panditregister'])->name("panditregister");
-Route::get('/bookpandit',[UserController::class,'bookpandit'])->name("bookpandit");
-Route::get('/astrology',[UserController::class,'astrology'])->name("astrology");
-Route::get('/temple',[UserController::class,'temple'])->name("temple");
-Route::get('/kundalini',[UserController::class,'kundalini'])->name("kundalini");
-Route::get('/annaprashan',[UserController::class,'annaprashan'])->name("annaprashan");
-Route::get('/aa',[UserController::class,'aa'])->name("aa");
+// Route::get('/panditregister',[UserController::class,'panditregister'])->name("panditregister");
+Route::get('/bookpandit', [UserController::class, 'bookpandit'])->name("bookpandit");
+Route::get('/astrology', [UserController::class, 'astrology'])->name("astrology");
+Route::get('/temple', [UserController::class, 'temple'])->name("temple");
+Route::get('/kundalini', [UserController::class, 'kundalini'])->name("kundalini");
+Route::get('/annaprashan', [UserController::class, 'annaprashan'])->name("annaprashan");
+Route::get('/aa', [UserController::class, 'aa'])->name("aa");
 
 // Pandit Authentication Routes
-Route::get('/panditlogin', [PanditController::class, 'showLoginForm'])->name('panditlogin');
-Route::post('/panditlogin', [PanditController::class, 'login'])->name('pandit.login.submit');
-Route::get('/panditregister', [PanditController::class, 'showRegistrationForm'])->name('panditregister');
-Route::post('/panditregister', [PanditController::class, 'register'])->name('pandit.register.submit');
+// Route::get('/panditlogin', [PanditController::class, 'showLoginForm'])->name('panditlogin');
+// Route::post('/panditlogin', [PanditController::class, 'login'])->name('pandit.login.submit');
+// Route::get('/panditregister', [PanditController::class, 'showRegistrationForm'])->name('panditregister');
+// Route::post('/panditregister', [PanditController::class, 'register'])->name('pandit.register.submit');
 
 // Pandit Dashboard Routes (Protected)
 Route::middleware(['auth:pandit'])->prefix('pandit')->name('pandit.')->group(function () {
     Route::get('/dashboard', [PanditController::class, 'dashboard'])->name('dashboard');
-        Route::post('/pandit/change-password', [PanditController::class, 'changePassword'])->name('changePassword');
+    Route::post('/pandit/change-password', [PanditController::class, 'changePassword'])->name('changePassword');
 
     Route::get('/bookings', [PanditController::class, 'bookings'])->name('bookings');
     Route::get('/profile', [PanditController::class, 'profile'])->name('profile');
@@ -62,7 +62,7 @@ Route::post('/adminlogin', [AdminController::class, 'login'])->name('admin.login
 //     // User Management
 //     Route::get('/users', [AdminController::class, 'users'])->name('users');
 //     Route::patch('/users/{id}/toggle-status', [AdminController::class, 'toggleUserStatus'])->name('users.toggle-status');
-    
+
 //     // Booking Management
 //     Route::get('/bookings', [AdminController::class, 'bookings'])->name('bookings');
 //     Route::patch('/bookings/{id}/status', [AdminController::class, 'updateBookingStatus'])->name('bookings.update-status');
@@ -89,11 +89,11 @@ Route::post('/adminlogin', [AdminController::class, 'login'])->name('admin.login
 //     Route::get('/products/{id}/edit', [AdminController::class, 'editProduct'])->name('products.edit');
 //     Route::put('/products/{id}', [AdminController::class, 'updateProduct'])->name('products.update');
 //     Route::delete('/products/{id}', [AdminController::class, 'deleteProduct'])->name('products.delete');
-    
+
 //     // Order Management
 //     Route::get('/orders', [AdminController::class, 'orders'])->name('orders');
 //     Route::patch('/orders/{id}/update-status', [AdminController::class, 'updateOrderStatus'])->name('orders.update-status');
-    
+
 //     // Service Management
 //     Route::get('/services', [AdminController::class, 'services'])->name('services');
 //     Route::get('/services/create', [AdminController::class, 'createService'])->name('services.create');
@@ -102,7 +102,7 @@ Route::post('/adminlogin', [AdminController::class, 'login'])->name('admin.login
 //     Route::put('/services/{id}', [AdminController::class, 'updateService'])->name('services.update');
 //     Route::delete('/services/{id}', [AdminController::class, 'deleteService'])->name('services.delete');
 //     Route::patch('/services/{id}/toggle-status', [AdminController::class, 'toggleServiceStatus'])->name('services.toggle-status');
-    
+
 //     // Blog Management
 //     Route::get('/blogs', [AdminController::class, 'blogs'])->name('blogs');
 //     Route::get('/blogs/create', [AdminController::class, 'createBlog'])->name('blogs.create');
@@ -130,27 +130,29 @@ Route::middleware(['auth'])->prefix('user')->name('user.')->group(function () {
 
 
 // ...................................................
+Route::get('/register', [AuthController::class, 'showUserRegister'])->name('register');
+Route::post('/register', [AuthController::class, 'registerUser'])->name('register.submit');
 
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
 Route::post('/login', [AuthController::class, 'login'])->name('login.submit');
-Route::middleware(['auth','role:admin'])->prefix('admin')->name('admin.')->group(function () {
+Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
     // User Management
     Route::get('/users', [AdminController::class, 'users'])->name('users');
     Route::patch('/users/{id}/toggle-status', [AdminController::class, 'toggleUserStatus'])->name('users.toggle-status');
-    
+
     // Booking Management
     Route::get('/bookings', [AdminController::class, 'bookings'])->name('bookings');
     Route::patch('/bookings/{id}/status', [AdminController::class, 'updateBookingStatus'])->name('bookings.update-status');
-    
+
     // Pandit Management
     Route::get('/pandits', [AdminController::class, 'pandits'])->name('pandits');
     Route::get('/pandits/create', [AdminController::class, 'createPandit'])->name('pandits.create');
     Route::post('/pandits', [AdminController::class, 'storePandit'])->name('pandits.store');
     Route::patch('/pandits/{id}/toggle-status', [AdminController::class, 'togglePanditStatus'])->name('pandits.toggle-status');
-    
+
     // Temple Management
     Route::get('/temples', [AdminController::class, 'temples'])->name('temples');
     Route::get('/temples/create', [AdminController::class, 'createTemple'])->name('temples.create');
@@ -159,7 +161,7 @@ Route::middleware(['auth','role:admin'])->prefix('admin')->name('admin.')->group
     Route::put('/temples/{id}', [AdminController::class, 'updateTemple'])->name('temples.update');
     Route::delete('/temples/{id}', [AdminController::class, 'deleteTemple'])->name('temples.delete');
     Route::patch('/temples/{id}/toggle-status', [AdminController::class, 'toggleTempleStatus'])->name('temples.toggle-status');
-    
+
     // Product Management
     Route::get('/products', [AdminController::class, 'products'])->name('products');
     Route::get('/products/create', [AdminController::class, 'createProduct'])->name('products.create');
@@ -167,11 +169,11 @@ Route::middleware(['auth','role:admin'])->prefix('admin')->name('admin.')->group
     Route::get('/products/{id}/edit', [AdminController::class, 'editProduct'])->name('products.edit');
     Route::put('/products/{id}', [AdminController::class, 'updateProduct'])->name('products.update');
     Route::delete('/products/{id}', [AdminController::class, 'deleteProduct'])->name('products.delete');
-    
+
     // Order Management
     Route::get('/orders', [AdminController::class, 'orders'])->name('orders');
     Route::patch('/orders/{id}/update-status', [AdminController::class, 'updateOrderStatus'])->name('orders.update-status');
-    
+
     // Service Management
     Route::get('/services', [AdminController::class, 'services'])->name('services');
     Route::get('/services/create', [AdminController::class, 'createService'])->name('services.create');
@@ -180,11 +182,10 @@ Route::middleware(['auth','role:admin'])->prefix('admin')->name('admin.')->group
     Route::put('/services/{id}', [AdminController::class, 'updateService'])->name('services.update');
     Route::delete('/services/{id}', [AdminController::class, 'deleteService'])->name('services.delete');
     Route::patch('/services/{id}/toggle-status', [AdminController::class, 'toggleServiceStatus'])->name('services.toggle-status');
-    
+
     // Blog Management
     Route::get('/blogs', [AdminController::class, 'blogs'])->name('blogs');
     Route::get('/blogs/create', [AdminController::class, 'createBlog'])->name('blogs.create');
     Route::post('/blogs', [AdminController::class, 'storeBlog'])->name('blogs.store');
     Route::patch('/blogs/{id}/toggle-status', [AdminController::class, 'toggleBlogStatus'])->name('blogs.toggle-status');
-
 });

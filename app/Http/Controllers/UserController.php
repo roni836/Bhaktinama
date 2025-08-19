@@ -86,42 +86,7 @@ class UserController extends Controller
     
     // User Authentication Methods
     
-    /**
-     * Handle user login request
-     */
-    public function loginUser(Request $request)
-    {
-        $validator = Validator::make($request->all(), [
-            'email_phone' => 'required|string',
-            'password' => 'required|string',
-        ]);
-        
-        if ($validator->fails()) {
-            return back()->withErrors($validator)->withInput();
-        }
-        
-        // Check if input is email or phone
-        $loginField = filter_var($request->email_phone, FILTER_VALIDATE_EMAIL) ? 'email' : 'phone';
-        
-        $credentials = [
-            $loginField => $request->email_phone,
-            'password' => $request->password
-        ];
-        
-        if (Auth::attempt($credentials, $request->filled('remember'))) {
-            $request->session()->regenerate();
-            
-            return redirect()->intended('/');
-        }
-        
-        return back()->withErrors([
-            'email_phone' => 'The provided credentials do not match our records.',
-        ])->withInput();
-    }
-    
-    /**
-     * Handle user registration request
-     */
+   
     public function registerUser(Request $request)
     {
         $validator = Validator::make($request->all(), [
