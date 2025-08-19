@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use Laravel\Socialite\Facades\Socialite;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -52,7 +53,7 @@ class AuthController extends Controller
 
     public function login(Request $request)
     {
-       
+
         $credentials = Validator::make($request->all(), [
             'email' => 'required|email',
             'password' => 'required',
@@ -85,5 +86,42 @@ class AuthController extends Controller
         $request->session()->regenerateToken();
 
         return redirect()->route('login')->with('success', 'Logged out successfully.');
+    }
+    public function redirect()
+    {
+        return Socialite::driver('google')->redirect();
+    }
+
+    // Step 2: Handle callback
+    public function callback()
+    {
+        $googleUser = Socialite::driver('google')->stateless()->user();
+
+        // Check if user already exists
+        $user = User::where('email', $googleUser->getEmail())->first();
+
+        if (!$user) {
+            // Create new user with role = user
+            $user = User::create([
+                'name'     => $googleUser->getName(),
+                'email'    => $googleUser->getEmail(),
+                'password' => Hash::make('123456789'), // random password
+                'role'     => 'user',
+                'is_active' => true,
+                'is_verified' => true,
+            ]);
+        }
+
+        // Login the user
+        Auth::login($user);
+
+        // Redirect based on role
+        if ($user->role === 'admin') {
+            return redirect()->route('admin.dashboard');
+        } elseif ($user->role === 'pandit') {
+            return redirect()->route('pandit.dashboard');
+        } else {
+            return redirect()->route('user.dashboard');
+        }
     }
 }

@@ -133,6 +133,12 @@ Route::middleware(['auth'])->prefix('user')->name('user.')->group(function () {
 Route::get('/register', [AuthController::class, 'showUserRegister'])->name('register');
 Route::post('/register', [AuthController::class, 'registerUser'])->name('register.submit');
 
+
+
+Route::get('auth/google', [AuthController::class, 'redirect'])->name('google.login');
+Route::get('auth/google/callback', [AuthController::class, 'callback']);
+
+
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
 Route::post('/login', [AuthController::class, 'login'])->name('login.submit');
 Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
