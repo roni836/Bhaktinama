@@ -11,15 +11,15 @@ return [
             'driver' => 'session',
             'provider' => 'users',
         ],
-        
-        'pandit' => [
-            'driver' => 'session',
-            'provider' => 'pandits',
+
+        'api' => [
+            'driver' => 'token',
+            'provider' => 'users',
+            'hash' => false,
         ],
-        
-        'admin' => [
+        'admin' => [   // 👈 add this
             'driver' => 'session',
-            'provider' => 'admins',
+            'provider' => 'users',
         ],
     ],
 
@@ -28,9 +28,8 @@ return [
             'driver' => 'eloquent',
             'model' => App\Models\User::class,
         ],
-        
-       
     ],
+
 
     'passwords' => [
         'users' => [
@@ -39,7 +38,7 @@ return [
             'expire' => 60,
             'throttle' => 60,
         ],
-        
+
         'admins' => [
             'provider' => 'admins',
             'table' => 'password_reset_tokens',
