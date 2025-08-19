@@ -191,7 +191,7 @@
                 <!-- Submit Button -->
                 <div class="flex justify-center mt-8">
                     <button type="submit"
-                        class="px-8 py-3 bg-blue-900 text-white rounded-md hover:bg-blue-800 font-medium">
+                        class="px-8 py-3 bg-[#1F2B50] text-white rounded-md hover:bg-[#1F2B50] font-medium">
                         Add Service
                     </button>
                 </div>

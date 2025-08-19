@@ -3,74 +3,83 @@
 @section('title', 'Orders Management')
 
 @section('content')
-<div class="max-w-7xl mx-auto">
-    <div class="bg-white shadow rounded-lg">
-        <div class="px-6 py-4 border-b border-gray-200">
-            <div class="flex items-center justify-between">
-                <h2 class="text-xl font-semibold text-gray-800">Orders Management</h2>
-                <div class="text-sm text-gray-500">
-                    Total: {{ $orders->total() }} orders
-                </div>
+
+<div class="p-6">
+    <!-- Page Header -->
+    <div class="bg-white rounded-xl shadow p-6">
+        <h1 class="text-xl font-semibold text-orange-600">Orders</h1>
+        <p class="text-gray-500 text-sm">Manage and track all customer orders</p>
+
+        <!-- Filters -->
+        <div class="mt-4 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+            <div class="flex items-center gap-3">
+                <input type="date" class="border rounded-lg px-3 py-2 text-sm text-gray-600 focus:ring-2 focus:ring-orange-400">
+                <input type="date" class="border rounded-lg px-3 py-2 text-sm text-gray-600 focus:ring-2 focus:ring-orange-400">
+                <select class="border rounded-lg px-3 py-2 text-sm text-gray-600 focus:ring-2 focus:ring-orange-400">
+                    <option>All Statuses</option>
+                    <option>Processing</option>
+                    <option>Shipped</option>
+                    <option>Completed</option>
+                    <option>Cancelled</option>
+                </select>
+            </div>
+
+            <!-- Search -->
+            <div>
+                <input type="text" placeholder="Search orders..." 
+                    class="border rounded-full px-4 py-2 text-sm w-64 focus:ring-2 focus:ring-orange-400">
             </div>
         </div>
-        
-        <div class="overflow-x-auto">
-            <table class="min-w-full divide-y divide-gray-200">
-                <thead class="bg-gray-50">
-                    <tr>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Order ID</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Customer</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Total</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+
+        <!-- Orders Table -->
+        <div class="mt-6 overflow-x-auto">
+            <table class="min-w-full border-collapse">
+                <thead>
+                    <tr class="text-left text-gray-600 text-sm border-b">
+                        <th class="py-3 px-4">Order ID</th>
+                        <th class="py-3 px-4">Customer Name</th>
+                        <th class="py-3 px-4">Order Date</th>
+                        <th class="py-3 px-4">Total Amount</th>
+                        <th class="py-3 px-4">Status</th>
+                        <th class="py-3 px-4">Actions</th>
                     </tr>
                 </thead>
-                <tbody class="bg-white divide-y divide-gray-200">
-                    @forelse($orders as $order)
-                    <tr>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">#{{ $order->id }}</td>
-                        <td class="px-6 py-4 whitespace-nowrap">
-                            <div class="text-sm font-medium text-gray-900">{{ $order->user->name }}</div>
-                            <div class="text-sm text-gray-500">{{ $order->user->email }}</div>
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">₹{{ number_format($order->total_amount, 2) }}</td>
-                        <td class="px-6 py-4 whitespace-nowrap">
-                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
-                                @if($order->status == 'pending') bg-yellow-100 text-yellow-800
-                                @elseif($order->status == 'confirmed') bg-blue-100 text-blue-800
-                                @elseif($order->status == 'delivered') bg-green-100 text-green-800
-                                @elseif($order->status == 'cancelled') bg-red-100 text-red-800
-                                @else bg-gray-100 text-gray-800 @endif">
-                                {{ ucfirst($order->status) }}
+                <tbody class="text-sm text-gray-700">
+                    @foreach ($orders as $order)
+                    <tr class="border-b hover:bg-gray-50">
+                        <td class="py-3 px-4 text-orange-600 font-medium">#{{ $order->order_id }}</td>
+                        <td class="py-3 px-4">{{ $order->customer_name }}</td>
+                        <td class="py-3 px-4">{{ \Carbon\Carbon::parse($order->order_date)->format('F j, Y') }}</td>
+                        <td class="py-3 px-4">INR {{ number_format($order->total_amount, 0, '.', ',') }}</td>
+                        <td class="py-3 px-4">
+                            <span class="px-3 py-1 rounded-full text-xs font-medium 
+                                {{ $order->status == 'Processing' ? 'bg-yellow-400 text-white' : '' }}
+                                {{ $order->status == 'Completed' ? 'bg-green-500 text-white' : '' }}
+                                {{ $order->status == 'Cancelled' ? 'bg-red-500 text-white' : '' }}
+                                {{ $order->status == 'Shipped' ? 'bg-blue-500 text-white' : '' }}">
+                                {{ $order->status }}
                             </span>
                         </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $order->created_at->format('M d, Y') }}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                            <form action="{{ route('admin.orders.update-status', $order->id) }}" method="POST" class="inline">
-                                @csrf
-                                @method('PATCH')
-                                <select name="status" onchange="this.form.submit()" class="text-sm border-gray-300 rounded">
-                                    <option value="pending" {{ $order->status == 'pending' ? 'selected' : '' }}>Pending</option>
-                                    <option value="confirmed" {{ $order->status == 'confirmed' ? 'selected' : '' }}>Confirmed</option>
-                                    <option value="delivered" {{ $order->status == 'delivered' ? 'selected' : '' }}>Delivered</option>
-                                    <option value="cancelled" {{ $order->status == 'cancelled' ? 'selected' : '' }}>Cancelled</option>
-                                </select>
-                            </form>
+                        <td class="py-3 px-4">
+                            <a href="{{ route('orders.show', $order->id) }}" 
+                               class="bg-orange-500 hover:bg-orange-600 text-white text-xs px-4 py-2 rounded-full">
+                                View Details
+                            </a>
                         </td>
                     </tr>
-                    @empty
-                    <tr>
-                        <td colspan="6" class="px-6 py-4 text-center text-gray-500">No orders found.</td>
-                    </tr>
-                    @endforelse
+                    @endforeach
                 </tbody>
             </table>
         </div>
-        
-        <div class="px-6 py-4 border-t border-gray-200">
-            {{ $orders->links() }}
+
+        <!-- Pagination -->
+        <div class="mt-4 flex items-center justify-between text-sm text-gray-600">
+            <p>Showing {{ $orders->firstItem() }} to {{ $orders->lastItem() }} of {{ $orders->total() }} entries</p>
+            <div class="flex items-center space-x-2">
+                {{ $orders->links('pagination::tailwind') }}
+            </div>
         </div>
     </div>
 </div>
 @endsection
+

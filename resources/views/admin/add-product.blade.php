@@ -83,7 +83,7 @@
 
             <div class="flex justify-end space-x-4 mt-6">
                 <a href="{{ route('admin.products') }}" class="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50">Cancel</a>
-                <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">Add Product</button>
+            <button type="submit" class="px-4 py-2 bg-[#1F2B50] text-white rounded-md hover:bg-[#1F2B50]">Add Product</button>
             </div>
         </form>
     </div>

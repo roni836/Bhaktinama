@@ -83,8 +83,8 @@
                 <a href="{{ url('/pandits/create') }}" class="text-orange-500 text-sm hover:underline">+ Pandit</a>
 
                 <!-- Submit -->
-                <button type="submit" 
-                        class="w-full bg-indigo-900 text-white py-3 rounded-full hover:bg-indigo-800 transition">
+                <button type="submit"
+                        class="w-full bg-[#1F2B50] text-white py-3 rounded-full hover:bg-[#1F2B50] transition">
                     Add Temple
                 </button>
             </form>
