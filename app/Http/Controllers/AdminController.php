@@ -48,25 +48,25 @@ class AdminController extends Controller
         ])->withInput();
     }
 
-    public function logout(Request $request)
-    {
-        Auth::guard('admin')->logout();
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
+    // public function logout(Request $request)
+    // {
+    //     Auth::guard('admin')->logout();
+    //     $request->session()->invalidate();
+    //     $request->session()->regenerateToken();
 
-        return redirect()->route('adminlogin')->with('success', 'Logged out successfully.');
-    }
+    //     return redirect()->route('adminlogin')->with('success', 'Logged out successfully.');
+    // }
 
     // Dashboard
     public function dashboard()
     {
         $stats = [
             'total_users' => User::count(),
-            'total_pandits' => Pandit::count(),
+            // 'total_pandits' => Pandit::count(),
             'total_bookings' => Booking::count(),
             'total_orders' => Order::count(),
             'pending_bookings' => Booking::where('status', 'pending')->count(),
-            'active_pandits' => Pandit::where('is_active', true)->count(),
+            // 'active_pandits' => Pandit::where('is_active', true)->count(),
         ];
 
         $recent_bookings = Booking::with(['user', 'pandit'])

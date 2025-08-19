@@ -21,10 +21,16 @@ class User extends Authenticatable
         'name',
         'email',
         'phone',
-        'address',
-        'profile_image',
         'password',
+        'role',
+        'specialization',
+        'location',
+        'bio',
+        'profile_image',
+        'is_verified',
+        'is_active',
     ];
+    
 
     /**
      * The attributes that should be hidden for serialization.
@@ -48,4 +54,5 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+    
 }
