@@ -57,14 +57,16 @@
                     <input id="images" type="file" name="images[]" multiple class="hidden" accept="image/*">
                 </label>
             </div>
-
-            <!-- Pandit Name -->
             <div>
-                <input type="text" name="name" placeholder="Enter the temple name"
+                <select name="temple"
                     class="w-full border rounded-md px-4 py-2 focus:ring-2 focus:ring-orange-400 outline-none">
+                    <option value="">Select Temple</option>
+                    <option value="temple1">Temple 1</option>
+                    <option value="temple2">Temple 2</option>
+                    <option value="temple3">Temple 3</option>
+                </select>
             </div>
 
-            <!-- Specialized In -->
             <div>
                 <input type="text" name="skills" placeholder="Enter the Skills"
                     class="w-full border rounded-md px-4 py-2 focus:ring-2 focus:ring-orange-400 outline-none">
@@ -84,7 +86,7 @@
 
             <!-- Submit Button -->
             <button type="submit"
-                class="w-full bg-indigo-900 text-white py-3 rounded-full hover:bg-indigo-800 transition">
+                class="w-full bg-[#1F2B50] text-white py-3 rounded-full hover:bg-[#1F2B50] transition">
                 Add Pandit
             </button>
         </form>

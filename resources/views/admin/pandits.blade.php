@@ -7,31 +7,39 @@
 
 <div class="p-6 max-w-7xl mx-auto">
 
+   
     <!-- Header -->
     <div class="flex justify-between items-center mb-6">
-        <h1 class="text-2xl font-bold text-orange-600">Pandit List</h1>
-        <a href="{{ route('admin.pandits.create') }}" class="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-full">+ Pandit</a>
+        <h1 class="text-2xl font-semibold text-orange-600"> Pandit List</h1>
+        <a href="{{ route('admin.pandits.create') }}" 
+           class="bg-orange-500 text-white px-4 py-2 rounded-full hover:bg-orange-600 transition">
+            + Pandit
+        </a>
     </div>
 
-    <!-- City Filter -->
-    <div class="flex flex-wrap gap-3 mb-6">
-        <button class="px-4 py-2 rounded-full border bg-orange-500 text-white">ALL</button>
-        <button class="px-4 py-2 rounded-full border">Patna</button>
-        <button class="px-4 py-2 rounded-full border">Surat</button>
-        <button class="px-4 py-2 rounded-full border">Ahmedabad</button>
-        <button class="px-4 py-2 rounded-full border">Pune</button>
-        <button class="px-4 py-2 rounded-full border">Mumbai</button>
-        <button class="px-4 py-2 rounded-full border">Kolkata</button>
-        <button class="px-4 py-2 rounded-full border">Bangalore</button>
-        <button class="px-4 py-2 rounded-full border">Delhi</button>
-    </div>
+    <!-- Filters -->
+    <div class="flex flex-wrap items-center justify-between mb-6">
+        <div class="flex space-x-3 overflow-x-auto">
+            <button class="px-4 py-2 rounded-full bg-orange-500 text-white text-sm">ALL</button>
+            <button class="px-4 py-2 rounded-full border text-sm">Patna</button>
+            <button class="px-4 py-2 rounded-full border text-sm">Surat</button>
+            <button class="px-4 py-2 rounded-full border text-sm">Ahmedabad</button>
+            <button class="px-4 py-2 rounded-full border text-sm">Pune</button>
+            <button class="px-4 py-2 rounded-full border text-sm">Mumbai</button>
+            <button class="px-4 py-2 rounded-full border text-sm">Kolkata</button>
+            <button class="px-4 py-2 rounded-full border text-sm">Bangalore</button>
+            <button class="px-4 py-2 rounded-full border text-sm">Delhi</button>
+        </div>
 
-    <!-- Search -->
-    <div class="flex justify-end mb-6">
-        <div class="flex items-center border rounded-full px-3">
-            <input type="text" placeholder="Search temples.."
-                class="px-2 py-1 outline-none bg-transparent">
-            <span class="text-gray-500">🔍</span>
+        <!-- Search -->
+        <div class="relative">
+            <input type="text" placeholder="Search temples..."
+                   class="border rounded-full pl-10 pr-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-400">
+            <svg class="w-4 h-4 absolute left-3 top-3 text-orange-500" 
+                 xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                      d="M21 21l-4.35-4.35M11 19a8 8 0 100-16 8 8 0 000 16z" />
+            </svg>
         </div>
     </div>
 
