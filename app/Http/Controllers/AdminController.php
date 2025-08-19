@@ -20,33 +20,33 @@ use Illuminate\Support\Facades\Http;
 class AdminController extends Controller
 {
     // Authentication
-    public function showLoginForm()
-    {
-        return view('adminlogin');
-    }
+    // public function showLoginForm()
+    // {
+    //     return view('adminlogin');
+    // }
 
-    public function login(Request $request)
-    {
-        $validator = Validator::make($request->all(), [
-            'email' => 'required|email',
-            'password' => 'required|string|min:6',
-        ]);
+    // public function login(Request $request)
+    // {
+    //     $validator = Validator::make($request->all(), [
+    //         'email' => 'required|email',
+    //         'password' => 'required|string|min:6',
+    //     ]);
 
-        if ($validator->fails()) {
-            return back()->withErrors($validator)->withInput();
-        }
+    //     if ($validator->fails()) {
+    //         return back()->withErrors($validator)->withInput();
+    //     }
 
-        $credentials = $request->only('email', 'password');
+    //     $credentials = $request->only('email', 'password');
 
-        if (Auth::guard('admin')->attempt($credentials, $request->filled('remember'))) {
-            $request->session()->regenerate();
-            return redirect()->intended(route('admin.dashboard'));
-        }
+    //     if (Auth::guard('admin')->attempt($credentials, $request->filled('remember'))) {
+    //         $request->session()->regenerate();
+    //         return redirect()->intended(route('admin.dashboard'));
+    //     }
 
-        return back()->withErrors([
-            'email' => 'The provided credentials do not match our records.',
-        ])->withInput();
-    }
+    //     return back()->withErrors([
+    //         'email' => 'The provided credentials do not match our records.',
+    //     ])->withInput();
+    // }
 
     // public function logout(Request $request)
     // {
@@ -119,13 +119,13 @@ class AdminController extends Controller
     // Pandit Management
     public function pandits()
     {
-        $pandits = Pandit::latest()->paginate(20);
+        $pandits = User::where('role','pandit')->latest()->paginate(20);
         return view('admin.pandits', compact('pandits'));
     }
 
     public function createPandit()
     {
-        
+
         $response = Http::post('https://countriesnow.space/api/v0.1/countries/states', [
             'country' => 'India'
         ]);
@@ -143,19 +143,19 @@ class AdminController extends Controller
     public function storePandit(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:pandits',
-            'profile_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:5120',
-            'phone' => 'required|string|max:15',
-            // 'password' => 'required|string|min:6',
+            'name'           => 'required|string|max:255',
+            'email'          => 'required|email|unique:users,email', // ✅ fixed
+            'profile_image'  => 'nullable|image|mimes:jpeg,png,jpg,gif|max:5120',
+            'phone'          => 'required|string|max:15',
             'specialization' => 'required|string|max:255',
-            'location' => 'required|string|max:255',
-            'bio' => 'nullable|string',
+            'location'       => 'required|string|max:255',
+            'bio'            => 'nullable|string',
         ]);
 
         if ($validator->fails()) {
             return back()->withErrors($validator)->withInput();
         }
+
         // Handle profile image upload
         $profileImagePath = null;
         if ($request->hasFile('profile_image')) {
@@ -167,25 +167,28 @@ class AdminController extends Controller
             $profileImagePath = 'images/pandits/' . $imageName;
         }
 
-        Pandit::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'phone' => $request->phone,
-            'profile_image' => $profileImagePath,
+        // Create pandit inside users table
+        User::create([
+            'name'           => $request->name,
+            'email'          => $request->email,
+            'phone'          => $request->phone,
+            'profile_image'  => $profileImagePath,
             'password'       => Hash::make('pandit@123'),
             'specialization' => $request->specialization,
-            'location' => $request->location,
-            'bio' => $request->bio,
-            'is_verified' => true,
-            'is_active' => true,
+            'location'       => $request->location,
+            'bio'            => $request->bio,
+            'is_verified'    => true,
+            'is_active'      => true,
+            'role'           => 'pandit', // ✅ make sure to set role
         ]);
 
         return redirect()->route('admin.pandits')->with('success', 'Pandit added successfully.');
     }
 
+
     public function togglePanditStatus($id)
     {
-        $pandit = Pandit::findOrFail($id);
+        $pandit = User::findOrFail($id);
         $pandit->is_active = !$pandit->is_active;
         $pandit->save();
 
@@ -305,7 +308,7 @@ class AdminController extends Controller
 
     public function createService()
     {
-       
+
         $response = Http::post('https://countriesnow.space/api/v0.1/countries/states', [
             'country' => 'India'
         ]);

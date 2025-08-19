@@ -29,15 +29,7 @@ return [
             'model' => App\Models\User::class,
         ],
         
-        'pandits' => [
-            'driver' => 'eloquent',
-            'model' => App\Models\Pandit::class,
-        ],
-        
-        'admins' => [
-            'driver' => 'eloquent',
-            'model' => App\Models\Admin::class,
-        ],
+       
     ],
 
     'passwords' => [

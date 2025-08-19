@@ -99,7 +99,7 @@
                 <!-- Signup -->
                 <p class="text-center text-gray-600 text-sm mt-8">
                     Don't have an account?
-                    <a href="{{ route('panditregister') }}" class="text-orange-500 hover:underline font-semibold">Sign up</a>
+                    <a href="{{ route('register') }}" class="text-orange-500 hover:underline font-semibold">Sign up</a>
                 </p>
                 <p class="text-center text-gray-500 text-xs mt-2">
                     <a href="#" class="hover:underline">Terms of Service</a> •
