@@ -65,7 +65,7 @@
                         <div class="relative">
                             <button class="flex items-center space-x-2 text-sm focus:outline-none">
                                 <img class="h-8 w-8 rounded-full object-cover" src="https://placehold.co/80x80/FFDDC1/FF7B00?text=Admin" alt="Admin">
-                                <span class="hidden md:block font-medium text-gray-700">{{ Auth::guard('admin')->user()->name ?? 'Admin User' }}</span>
+                                <span class="hidden md:block font-medium text-gray-700">{{ Auth::user()->name ?? 'Admin User' }}</span>
                             </button>
                         </div>
                     </div>
