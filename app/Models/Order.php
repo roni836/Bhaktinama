@@ -20,10 +20,7 @@ class Order extends Model
         'shipping_address',
         'order_notes'
     ];
-    
-    /**
-     * Get the user that owns the order
-     */
+
     public function user()
     {
         return $this->belongsTo(User::class);

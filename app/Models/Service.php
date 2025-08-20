@@ -8,28 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 class Service extends Model
 {
     use HasFactory;
-
-    protected $fillable = [
-        'title',
-        'description',
-        'short_description',
-        'introduction',
-        'importance',
-        'traditions',
-        'service_type',
-        'images',
-        'packages',
-        'faqs',
-        'price',
-        'duration',
-        'category',
-        'location',
-        'is_active',
-        'featured',
-        'meta_title',
-        'meta_description'
-    ];
-
+    protected $guarded = [];
+        
     protected $casts = [
         'is_active' => 'boolean',
         'featured' => 'boolean',

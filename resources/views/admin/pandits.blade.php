@@ -7,12 +7,12 @@
 
 <div class="p-6 max-w-7xl mx-auto">
 
-   
+
     <!-- Header -->
     <div class="flex justify-between items-center mb-6">
         <h1 class="text-2xl font-semibold text-orange-600"> Pandit List</h1>
-        <a href="{{ route('admin.pandits.create') }}" 
-           class="bg-orange-500 text-white px-4 py-2 rounded-full hover:bg-orange-600 transition">
+        <a href="{{ route('admin.pandits.create') }}"
+            class="bg-orange-500 text-white px-4 py-2 rounded-full hover:bg-orange-600 transition">
             + Pandit
         </a>
     </div>
@@ -34,92 +34,55 @@
         <!-- Search -->
         <div class="relative">
             <input type="text" placeholder="Search temples..."
-                   class="border rounded-full pl-10 pr-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-400">
-            <svg class="w-4 h-4 absolute left-3 top-3 text-orange-500" 
-                 xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
-                      d="M21 21l-4.35-4.35M11 19a8 8 0 100-16 8 8 0 000 16z" />
+                class="border rounded-full pl-10 pr-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-400">
+            <svg class="w-4 h-4 absolute left-3 top-3 text-orange-500"
+                xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M21 21l-4.35-4.35M11 19a8 8 0 100-16 8 8 0 000 16z" />
             </svg>
         </div>
     </div>
 
     <!-- Pandit Grid -->
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        @foreach($pandits as $pandit)
+        <div class="bg-white rounded-xl shadow-md overflow-hidden border hover:shadow-lg transition">
+            <img src="{{ $pandit->image }}" class="h-48 w-full object-cover">
 
-        <!-- Card -->
-        <div class="bg-white shadow rounded-xl overflow-hidden">
-            <img src="https://source.unsplash.com/400x250/?hindu,sage"
-                class="w-full h-48 object-cover" alt="">
             <div class="p-4">
-                <h2 class="font-semibold text-lg">Pandit Ramesh Upadhyay</h2>
-                <div class="flex items-center justify-between mt-3">
-                    <div class="flex space-x-3 text-gray-600">
-                        <button class="text-orange-500">✎</button>
-                        <button class="text-blue-500">ℹ️</button>
+                <h3 class="text-base font-semibold text-gray-800">{{ $pandit->name }}</h3>
+
+                <div class="flex justify-between items-center mt-3">
+                    <!-- Left icons -->
+                    <div class="flex space-x-3">
+                        <!-- Edit -->
+                        <a href="#"
+                            class="text-orange-500 hover:text-orange-600">
+                            <i class="fas fa-edit"></i>
+                        </a>
+
+                        <!-- Info -->
+                        <a href="#"
+                            class="text-black-500 hover:text-black-600">
+                            <i class="fas fa-trash"></i>
+                        </a>
                     </div>
-                    <!-- Toggle -->
-                    <label class="inline-flex items-center cursor-pointer">
-                        <input type="checkbox" class="sr-only" checked>
-                        <div class="w-10 h-5 bg-gray-300 rounded-full p-1 flex items-center">
-                            <div class="w-4 h-4 bg-orange-500 rounded-full"></div>
-                        </div>
+
+                    <!-- Toggle Switch -->
+                    <label class="relative inline-flex items-center cursor-pointer">
+                        <input type="checkbox" class="sr-only peer" {{ $pandit->status ? 'checked' : '' }}>
+                        <div class="w-11 h-6 bg-gray-300 rounded-full peer peer-checked:bg-orange-500 transition"></div>
+                        <div class="absolute left-1 top-1 bg-white w-4 h-4 rounded-full shadow-md transition peer-checked:translate-x-5"></div>
                     </label>
                 </div>
             </div>
         </div>
-
-        <!-- Duplicate cards for demo -->
-        <div class="bg-white shadow rounded-xl overflow-hidden">
-            <img src="https://source.unsplash.com/400x250/?priest,temple"
-                class="w-full h-48 object-cover" alt="">
-            <div class="p-4">
-                <h2 class="font-semibold text-lg">Pandit Arun Kumar</h2>
-                <div class="flex items-center justify-between mt-3">
-                    <div class="flex space-x-3 text-gray-600">
-                        <button class="text-orange-500">✎</button>
-                        <button class="text-blue-500">ℹ️</button>
-                    </div>
-                    <label class="inline-flex items-center cursor-pointer">
-                        <input type="checkbox" class="sr-only">
-                        <div class="w-10 h-5 bg-gray-300 rounded-full p-1 flex items-center">
-                            <div class="w-4 h-4 bg-orange-500 rounded-full"></div>
-                        </div>
-                    </label>
-                </div>
-            </div>
-        </div>
-
-        <div class="bg-white shadow rounded-xl overflow-hidden">
-            <img src="https://source.unsplash.com/400x250/?monk,india"
-                class="w-full h-48 object-cover" alt="">
-            <div class="p-4">
-                <h2 class="font-semibold text-lg">Pandit Mukesh Joshi</h2>
-                <div class="flex items-center justify-between mt-3">
-                    <div class="flex space-x-3 text-gray-600">
-                        <button class="text-orange-500">✎</button>
-                        <button class="text-blue-500">ℹ️</button>
-                    </div>
-                    <label class="inline-flex items-center cursor-pointer">
-                        <input type="checkbox" class="sr-only" checked>
-                        <div class="w-10 h-5 bg-gray-300 rounded-full p-1 flex items-center">
-                            <div class="w-4 h-4 bg-orange-500 rounded-full"></div>
-                        </div>
-                    </label>
-                </div>
-            </div>
-        </div>
-
-        <!-- Add more static cards as needed -->
+        @endforeach
+            <div class="mt-6">
+        {{ $pandits->links() }}
+    </div>
     </div>
 
-    <!-- Pagination -->
-    <div class="flex justify-center mt-6 space-x-2">
-        <button class="px-3 py-1 rounded bg-gray-200">Previous</button>
-        <button class="px-3 py-1 rounded bg-orange-500 text-white">1</button>
-        <button class="px-3 py-1 rounded bg-gray-200">2</button>
-        <button class="px-3 py-1 rounded bg-gray-200">3</button>
-        <button class="px-3 py-1 rounded bg-gray-200">Next</button>
-    </div>
 </div>
 
 

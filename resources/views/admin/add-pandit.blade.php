@@ -26,7 +26,7 @@
 
 <div class="flex min-h-screen">
     <div class="hidden md:block w-1/2 bg-orange-500 relative">
-        <img src="https://source.unsplash.com/600x800/?indian,old-man"
+        <img src=""
             alt="Pandit Image"
             class="w-full h-full object-cover mix-blend-overlay opacity-90">
     </div>
@@ -40,10 +40,8 @@
         <h2 class="text-2xl font-bold text-orange-600 mb-6">Add New Pandit</h2>
 
         <!-- Form -->
-        <form action="#" method="POST" enctype="multipart/form-data" class="space-y-5">
+        <form action="{{ route('admin.pandits.store') }}" method="POST" enctype="multipart/form-data" class="space-y-5">
             @csrf
-
-            <!-- Image Upload -->
             <div class="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center cursor-pointer hover:border-orange-500">
                 <label for="images" class="cursor-pointer">
                     <div class="flex flex-col items-center justify-center text-gray-500">
@@ -58,12 +56,23 @@
                 </label>
             </div>
             <div>
-                <select name="temple"
+                <label for="name" class="block text-sm font-medium text-gray-700">Pandit Name</label>
+                <input type="text" name="name" placeholder="Enter the Pandit Name"
                     class="w-full border rounded-md px-4 py-2 focus:ring-2 focus:ring-orange-400 outline-none">
-                    <option value="">Select Temple</option>
-                    <option value="temple1">Temple 1</option>
-                    <option value="temple2">Temple 2</option>
-                    <option value="temple3">Temple 3</option>
+            </div>
+            <div>
+                <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
+                <input type="email" name="email" placeholder="Enter the Email"
+                    class="w-full border rounded-md px-4 py-2 focus:ring-2 focus:ring-orange-400 outline-none">
+            </div>
+            <div>
+                <label for="temple_id" class="block text-sm font-medium text-gray-700">Select Temple</label>
+                <select name="temple_id"
+                    class="w-full border rounded-md px-4 py-2 focus:ring-2 focus:ring-orange-400 outline-none">
+                    <option>Select Temple</option>
+                    @foreach($temples as $temple)
+                    <option value="{{ $temple->id }}">{{ $temple->name }}</option>
+                    @endforeach
                 </select>
             </div>
 
@@ -72,10 +81,17 @@
                     class="w-full border rounded-md px-4 py-2 focus:ring-2 focus:ring-orange-400 outline-none">
             </div>
 
-            <!-- Location -->
             <div>
-                <input type="text" name="location" placeholder="Enter the location"
-                    class="w-full border rounded-md px-4 py-2 focus:ring-2 focus:ring-orange-400 outline-none">
+                <label for="location" class="block text-sm font-medium text-gray-700">Select State</label>
+                <select name="location" id="state"
+                    class="w-full border rounded-md px-4 py-2 mt-1 focus:ring-2 focus:ring-orange-400 outline-none">
+                    <option value="">-- Select State --</option>
+                    @foreach($states as $state)
+                    <option value="{{ $state }}" @selected(old('state')==$state)>
+                        {{ $state }}
+                    </option>
+                    @endforeach
+                </select>
             </div>
 
             <!-- Description -->

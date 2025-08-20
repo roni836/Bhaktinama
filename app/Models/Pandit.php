@@ -5,16 +5,15 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Product extends Model
+class Pandit extends Model
 {
-    use HasFactory;
 
+     use HasFactory;
     protected $guarded = [];
 
-    public function orders()
+
+    public function temple()
     {
-        return $this->hasMany(Order::class);
+        return $this->belongsTo(Temple::class);
     }
 }
-
-
