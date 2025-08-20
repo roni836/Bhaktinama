@@ -119,7 +119,7 @@ class AdminController extends Controller
     // Pandit Management
     public function pandits()
     {
-        $pandits = User::where('role','pandit')->latest()->paginate(20);
+        $pandits = User::where('role', 'pandit')->latest()->paginate(20);
         return view('admin.pandits', compact('pandits'));
     }
 
@@ -137,49 +137,46 @@ class AdminController extends Controller
                 $states = collect($data['data']['states'])->pluck('name');
             }
         }
-        return view('admin.add-pandit', compact('states'));
+        $temples = Temple::orderBy('name')->get(['id', 'name']);
+        return view('admin.add-pandit', compact('states', 'temples'));
     }
 
     public function storePandit(Request $request)
     {
         $validator = Validator::make($request->all(), [
             'name'           => 'required|string|max:255',
-            'email'          => 'required|email|unique:users,email', // ✅ fixed
-            'profile_image'  => 'nullable|image|mimes:jpeg,png,jpg,gif|max:5120',
-            'phone'          => 'required|string|max:15',
-            'specialization' => 'required|string|max:255',
-            'location'       => 'required|string|max:255',
+            'email'          => 'required|email|unique:users,email',
+            'phone'          => 'nullable|string|max:15',
+            'password'       => 'required|min:6|confirmed',
+            'specialization' => 'nullable|string',
+            'location'       => 'nullable|string',
             'bio'            => 'nullable|string',
+            'profile_image'  => 'nullable|image|mimes:jpg,png,jpeg|max:2048',
+            'temple_id'      => 'nullable|exists:temples,id',
         ]);
-
-        if ($validator->fails()) {
-            return back()->withErrors($validator)->withInput();
-        }
-
-        // Handle profile image upload
-        $profileImagePath = null;
+        $path = null;
         if ($request->hasFile('profile_image')) {
-            $imageName = time() . '.' . $request->profile_image->extension();
-            $request->profile_image->move(
-                public_path('images/pandits'),
-                $imageName
-            );
-            $profileImagePath = 'images/pandits/' . $imageName;
+            $path = $request->file('profile_image')->store('pandits', 'public');
         }
+
 
         // Create pandit inside users table
-        User::create([
+        $pandit = User::create([
             'name'           => $request->name,
             'email'          => $request->email,
             'phone'          => $request->phone,
-            'profile_image'  => $profileImagePath,
-            'password'       => Hash::make('pandit@123'),
+            'password'       => Hash::make($request->password),
+            'role'           => 'pandit',
             'specialization' => $request->specialization,
             'location'       => $request->location,
             'bio'            => $request->bio,
             'is_verified'    => true,
             'is_active'      => true,
-            'role'           => 'pandit', // ✅ make sure to set role
+            'profile_image'  => $path,
+        ]);
+        Pandit::create([
+            'user_id'   => $pandit->id,
+            'temple_id' => $request->temple_id, // if temple is selected
         ]);
 
         return redirect()->route('admin.pandits')->with('success', 'Pandit added successfully.');
@@ -267,25 +264,49 @@ class AdminController extends Controller
     public function storeTemple(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'name' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'location' => 'required|string|max:255',
-            'address' => 'required|string',
-            'phone' => 'nullable|string|max:15',
-            'email' => 'nullable|email',
-            'website' => 'nullable|url',
-            'deity' => 'nullable|string|max:255',
-            'timings' => 'nullable|string|max:255',
-            'entry_fee' => 'nullable|numeric|min:0',
-            'latitude' => 'nullable|numeric|between:-90,90',
-            'longitude' => 'nullable|numeric|between:-180,180',
+
+            'name'              => 'required|string|max:255',
+            'short_description' => 'nullable|string',
+            'overall_description' => 'nullable|string',
+            'location'          => 'nullable|string',
+            'visiting_info'     => 'nullable|string',
+            'facilities'        => 'nullable|string',
+            'images.*'          => 'nullable|image|mimes:jpg,png,jpeg|max:2048',
+            'packages'          => 'array',
+            'packages.*.name'   => 'required_with:packages|string',
+            'packages.*.price'  => 'required_with:packages|numeric',
         ]);
 
-        if ($validator->fails()) {
-            return back()->withErrors($validator)->withInput();
+
+
+        $images = [];
+        if ($request->hasFile('images')) {
+            foreach ($request->file('images') as $file) {
+                $path = $file->store('temples', 'public');
+                $images[] = $path;
+            }
         }
 
-        Temple::create($request->all());
+        $temple = Temple::create([
+            'name' => $request->name,
+            'short_description' => $request->short_description,
+            'overall_description' => $request->overall_description,
+            'location' => $request->location,
+            'visiting_info' => $request->visiting_info,
+            'facilities' => $request->facilities,
+            'images' => $images,
+        ]);
+
+        if ($request->has('packages') && is_array($request->packages)) {
+            foreach ($request->packages as $package) {
+                $temple->packages()->create([
+                    'name'  => $package['name'],
+                    'price' => $package['price'],
+                ]);
+            }
+        }
+
+        $temple->save();
 
         return redirect()->route('admin.temples')->with('success', 'Temple added successfully.');
     }

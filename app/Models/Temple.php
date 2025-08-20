@@ -8,28 +8,19 @@ use Illuminate\Database\Eloquent\Model;
 class Temple extends Model
 {
     use HasFactory;
-
-    protected $fillable = [
-        'name',
-        'description',
-        'location',
-        'address',
-        'phone',
-        'email',
-        'website',
-        'image',
-        'deity',
-        'timings',
-        'entry_fee',
-        'is_active',
-        'latitude',
-        'longitude'
-    ];
+    protected $guarded = [];
 
     protected $casts = [
-        'is_active' => 'boolean',
-        'entry_fee' => 'decimal:2',
-        'latitude' => 'decimal:8,6',
-        'longitude' => 'decimal:9,6',
+        'images' => 'array',
     ];
+
+    public function packages()
+    {
+        return $this->hasMany(Packages::class);
+    }
+
+    public function pandits()
+    {
+        return $this->hasMany(Pandit::class);
+    }
 }
