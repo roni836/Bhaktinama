@@ -9,15 +9,26 @@ class Service extends Model
 {
     use HasFactory;
     protected $guarded = [];
-        
+
     protected $casts = [
-        'is_active' => 'boolean',
-        'featured' => 'boolean',
-        'price' => 'decimal:2',
-        'images' => 'array',
         'packages' => 'array',
         'faqs' => 'array',
     ];
+
+    public function category()
+    {
+        return $this->belongsTo(ServiceCategory::class);
+    }
+
+    public function packages()
+    {
+        return $this->hasMany(ServicePackage::class);
+    }
+
+    public function faqs()
+    {
+        return $this->hasMany(ServiceFaq::class);
+    }
 
     public function bookings()
     {
