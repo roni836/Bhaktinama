@@ -11,17 +11,19 @@ return new class extends Migration
         Schema::create('services', function (Blueprint $table) {
             $table->id();
             $table->string('title');
-            $table->text('description');
+            $table->foreignId('service_category_id')->constrained('service_categories')->onDelete('cascade');
+            $table->foreignId('location_id')->nullable()->constrained('locations')->onDelete('set null');
+            $table->longText('description');
             $table->text('short_description')->nullable();
+            $table->longText('overview')->nullable();
+            $table->longText('significance')->nullable();
+            $table->longText('facilities')->nullable();
             $table->string('image')->nullable();
             $table->decimal('price', 10, 2)->nullable();
             $table->string('duration')->nullable();
-            $table->string('category')->nullable();
-            $table->string('location')->nullable();
+            $table->string('service_type')->nullable();
             $table->boolean('is_active')->default(true);
-            $table->boolean('featured')->default(false);
-            $table->string('meta_title')->nullable();
-            $table->text('meta_description')->nullable();
+            $table->boolean('is_trending')->default(false);
             $table->timestamps();
         });
     }
