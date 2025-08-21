@@ -22,15 +22,12 @@ return new class extends Migration
             $table->enum('role', ['admin', 'user', 'pandit'])->default('user');
 
             // Role-specific data (optional)
-            $table->string('specialization')->nullable(); // Only for Pandit
             $table->string('location')->nullable();       // User or Pandit
-            $table->text('bio')->nullable();
             $table->string('profile_image')->nullable();
             $table->timestamp('email_verified_at')->nullable();
 
             // Flags
             $table->boolean('is_verified')->default(false);
-            $table->boolean('is_active')->default(true);
 
             $table->rememberToken();
             $table->timestamps();

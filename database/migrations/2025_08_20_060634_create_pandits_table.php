@@ -14,6 +14,12 @@ return new class extends Migration
         Schema::create('pandits', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
+            $table->boolean('is_active')->default(true);
+            $table->string('specialization')->nullable(); // Only for Pandit
+            $table->text('bio')->nullable();
+
+
+
             $table->timestamps();
         });
     }
