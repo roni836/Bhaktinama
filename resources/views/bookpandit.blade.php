@@ -3,10 +3,11 @@
 @section('title', 'Page Title')
 
 @section('content')
-    <!-- Page specific content -->
+<!-- Page specific content -->
 
-            <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -18,34 +19,47 @@
     <style>
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #f0f2f5; /* Light gray background */
+            background-color: #f0f2f5;
+            /* Light gray background */
         }
+
         .card {
             background-color: #ffffff;
-            border-radius: 0.75rem; /* rounded-xl */
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); /* shadow-md */
+            border-radius: 0.75rem;
+            /* rounded-xl */
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            /* shadow-md */
             overflow: hidden;
             transition: transform 0.2s ease-in-out;
         }
+
         .card:hover {
             transform: translateY(-5px);
         }
+
         .card-image {
             width: 100%;
-            height: 180px; /* Fixed height for consistency */
+            height: 180px;
+            /* Fixed height for consistency */
             object-fit: cover;
         }
+
         .card-title {
-            background-color: #2c3e50; /* Dark blue-gray for title background */
+            background-color: #2c3e50;
+            /* Dark blue-gray for title background */
             color: #ffffff;
             padding: 0.75rem 1rem;
             text-align: center;
-            font-weight: 500; /* font-medium */
+            font-weight: 500;
+            /* font-medium */
         }
+
         .pagination-button {
-            background-color: #f39c12; /* Orange for active pagination */
+            background-color: #f39c12;
+            /* Orange for active pagination */
             color: #ffffff;
-            border-radius: 9999px; /* rounded-full */
+            border-radius: 9999px;
+            /* rounded-full */
             width: 36px;
             height: 36px;
             display: flex;
@@ -55,18 +69,24 @@
             cursor: pointer;
             transition: background-color 0.2s ease-in-out;
         }
+
         .pagination-button:hover {
-            background-color: #e67e22; /* Darker orange on hover */
+            background-color: #e67e22;
+            /* Darker orange on hover */
         }
+
         .pagination-button.inactive {
-            background-color: #e0e0e0; /* Light gray for inactive pagination */
+            background-color: #e0e0e0;
+            /* Light gray for inactive pagination */
             color: #333333;
         }
+
         .pagination-button.inactive:hover {
             background-color: #cccccc;
         }
     </style>
 </head>
+
 <body class="min-h-screen flex flex-col">
 
     <!-- Header Section -->
@@ -85,13 +105,15 @@
     <main class="flex-grow container mx-auto px-4 py-8">
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             <!-- Annaprashan Sanskar Puja Card -->
-@foreach($bookpandit as $item) 
+            @foreach($bookpandit as $item)
             <div class="card">
-                <img src="https://placehold.co/600x400/2c3e50/ffffff?text=Annaprashan" alt="Annaprashan Sanskar Puja" class="card-image">
-                <div class="card-title">{{$item->title}}</div>
+                <a href="{{ route('service-single-view', $item->id) }}">
+                    <img src="{{ $item->image_url }}" alt="Annaprashan Sanskar Puja" class="card-image">
+                    <div class="card-title">{{$item->title}}</div>
+                </a>
             </div>
 
-@endforeach  
+            @endforeach
         </div>
 
         <!-- Pagination -->
@@ -106,6 +128,6 @@
     </main>
 
 </body>
+
 </html>
 @endsection
-

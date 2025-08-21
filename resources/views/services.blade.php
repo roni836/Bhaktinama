@@ -47,10 +47,10 @@
             <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
                 <!-- Service Card 1 -->
                 @foreach($categories as $category)
-                <a href="{{route('bookpandit')}} " class="group transform transition-transform duration-500 hover:translate-x-4">
+                <a href="{{route('bookpandit',$category->id)}} " class="group transform transition-transform duration-500 hover:translate-x-4">
                     <div class="bg-white rounded-lg shadow-md overflow-hidden">
                         <div class="relative">
-                            <img src="{{ asset('https://placehold.co/400x300/FEEBC8/FF7B00?text=Pandit') }}" alt="Pandit" class="w-full h-48 object-cover rounded-t-lg">
+                            <img src="{{$category->image }}" alt="Pandit" class="w-full h-48 object-cover rounded-t-lg">
                             <div class="absolute inset-0 bg-orange-500 opacity-0 group-hover:opacity-20 transition-opacity duration-300"></div>
                         </div>
                         <div class="p-6">

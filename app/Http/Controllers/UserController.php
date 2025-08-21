@@ -26,69 +26,96 @@ class UserController extends Controller
     function services()
     {
         $data['categories'] = ServiceCategory::all();
-        $data['services']=Service::where('id',3)->get();
-        return view("services",$data);
+        $data['services'] = Service::where('id', 3)->get();
+        return view("services", $data);
     }
     function shop()
     {
-          $data['shop']=Product::all();
-        return view("shop",$data, $data);
+        $data['shop'] = Product::all();
+        return view("shop", $data, $data);
     }
-    function about() {
+    function about()
+    {
         return view("about");
     }
-    function blog() {
-        $data['blog']=Blog::all();
-        return view("blog",$data);
+    function blog()
+    {
+        $data['blog'] = Blog::all();
+        return view("blog", $data);
     }
-    function contact() {
+    function contact()
+    {
         return view("contact");
     }
-    function login() {
+    function login()
+    {
         return view("login");
     }
-    function register() {
+    function register()
+    {
         return view("register");
     }
-    function adminlogin() {
+    function adminlogin()
+    {
         return view("adminlogin");
     }
 
-    function panditlogin() {
+    function panditlogin()
+    {
         return view("panditlogin");
     }
-    function panditregister() {
+    function panditregister()
+    {
         return view("panditregister");
     }
-     function bookpandit() {
-        $data['bookpandit']=Service::all();
-        $data['categories'] = ServiceCategory::all();
-        return view("bookpandit",$data);
+    function bookpandit($id)
+    {
+        $data['bookpandit'] = Service::all();
+        $data['categories'] = ServiceCategory::findOrFail($id);
+        return view("bookpandit", $data);
     }
-     function astrology() {
-      
+
+    public function SingleView()
+    {
+        // Show all services (for listing page)
+        $services = Service::all();
+        return view("service-single-view.index", compact('services'));
+    }
+    public function show($id)
+    {
+        // Show single service details
+        $service = Service::findOrFail($id);
+        return view("service-single-view", compact('service'));
+    }
+    function astrology()
+    {
+
         return view("astrology");
     }
-     function temple() {
-        $data['temple']=Temple::all();
-        return view("temple",$data);
+    function temple()
+    {
+        $data['temple'] = Temple::all();
+        return view("temple", $data);
     }
-     function kundalini() {
-       
+    function kundalini()
+    {
+
         return view("kundalini");
     }
-     function aa() {
-       
+    function aa()
+    {
+
         return view("aa");
     }
 
-    function annaprashan() {
+    function annaprashan()
+    {
         return view("annaprashan");
     }
-    
+
     // User Authentication Methods
-    
-   
+
+
     public function registerUser(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -96,18 +123,18 @@ class UserController extends Controller
             'email_phone' => 'required|string',
             'password' => 'required|string|min:8|confirmed',
         ]);
-        
+
         if ($validator->fails()) {
             return back()->withErrors($validator)->withInput();
         }
-        
+
         // Check if input is email or phone
         $isEmail = filter_var($request->email_phone, FILTER_VALIDATE_EMAIL);
-        
+
         // Create user
         $user = new User();
         $user->name = $request->full_name;
-        
+
         if ($isEmail) {
             // Validate email uniqueness
             $emailExists = User::where('email', $request->email_phone)->exists();
@@ -125,29 +152,29 @@ class UserController extends Controller
             $user->phone = $request->email_phone;
             $user->email = $request->email_phone . '@placeholder.com'; // Placeholder email
         }
-        
+
         $user->password = Hash::make($request->password);
         $user->save();
-        
+
         // Log the user in
         Auth::login($user);
-        
+
         return redirect('/');
     }
-    
+
     /**
      * Log the user out
      */
     public function logout(Request $request)
     {
         Auth::logout();
-        
+
         $request->session()->invalidate();
         $request->session()->regenerateToken();
-        
+
         return redirect('/');
     }
-    
+
     /**
      * Show user dashboard
      */
@@ -155,7 +182,7 @@ class UserController extends Controller
     {
         return view('user.dashboard');
     }
-    
+
     /**
      * Show user profile
      */
@@ -163,7 +190,7 @@ class UserController extends Controller
     {
         return view('user.profile');
     }
-    
+
     /**
      * Show edit profile form
      */
@@ -171,14 +198,14 @@ class UserController extends Controller
     {
         return view('user.edit-profile');
     }
-    
+
     /**
      * Update user profile
      */
     public function updateProfile(Request $request)
     {
         $user = Auth::user();
-        
+
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users,email,' . $user->id,
@@ -186,32 +213,32 @@ class UserController extends Controller
             'address' => 'nullable|string|max:255',
             'profile_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
-        
+
         if ($validator->fails()) {
             return back()->withErrors($validator)->withInput();
         }
-        
+
         $user->name = $request->name;
         $user->email = $request->email;
         $user->phone = $request->phone;
         $user->address = $request->address;
-        
+
         if ($request->hasFile('profile_image')) {
             // Delete old image if exists
             if ($user->profile_image) {
                 Storage::disk('public')->delete($user->profile_image);
             }
-            
+
             // Store new image
             $imagePath = $request->file('profile_image')->store('profile-images', 'public');
             $user->profile_image = $imagePath;
         }
-        
+
         $user->save();
-        
+
         return redirect()->route('user.profile')->with('success', 'Profile updated successfully');
     }
-    
+
     /**
      * Show user bookings
      */
@@ -220,10 +247,10 @@ class UserController extends Controller
         $bookings = Booking::where('user_id', Auth::id())
             ->orderBy('created_at', 'desc')
             ->get();
-            
+
         return view('user.bookings', compact('bookings'));
     }
-    
+
     /**
      * Show user orders
      */
@@ -232,10 +259,10 @@ class UserController extends Controller
         $orders = Order::where('user_id', Auth::id())
             ->orderBy('created_at', 'desc')
             ->get();
-            
+
         return view('user.orders', compact('orders'));
     }
-    
+
     /**
      * Show change password form
      */
@@ -243,7 +270,7 @@ class UserController extends Controller
     {
         return view('user.change-password');
     }
-    
+
     /**
      * Update user password
      */
@@ -253,22 +280,22 @@ class UserController extends Controller
             'current_password' => 'required',
             'new_password' => 'required|string|min:8|confirmed',
         ]);
-        
+
         if ($validator->fails()) {
             return back()->withErrors($validator)->withInput();
         }
-        
+
         $user = Auth::user();
-        
+
         // Check if current password is correct
         if (!Hash::check($request->current_password, $user->password)) {
             return back()->withErrors(['current_password' => 'Current password is incorrect.']);
         }
-        
+
         // Update password
         $user->password = Hash::make($request->new_password);
         $user->save();
-        
+
         return redirect()->route('user.profile')->with('success', 'Password updated successfully');
     }
 }
