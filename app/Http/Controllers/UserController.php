@@ -14,7 +14,7 @@ use App\Models\Service;
 use App\Models\blog;
 use App\Models\Temple;
 use App\Models\Product;
-
+use App\Models\ServiceCategory;
 
 class UserController extends Controller
 {
@@ -25,7 +25,8 @@ class UserController extends Controller
 
     function services()
     {
-        $data['services']=Service::all();
+        $data['categories'] = ServiceCategory::all();
+        $data['services']=Service::where('id',3)->get();
         return view("services",$data);
     }
     function shop()
@@ -61,6 +62,7 @@ class UserController extends Controller
     }
      function bookpandit() {
         $data['bookpandit']=Service::all();
+        $data['categories'] = ServiceCategory::all();
         return view("bookpandit",$data);
     }
      function astrology() {

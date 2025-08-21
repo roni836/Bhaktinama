@@ -5,11 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\PanditController;
-
-
-
-
-
+use App\Http\Controllers\ServiceController;
 
 Route::get('/aa', [PanditController::class, 'aa'])->name("aa");
 Route::get('/curent', [PanditController::class, 'current'])->name("curent");
@@ -181,13 +177,15 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::patch('/orders/{id}/update-status', [AdminController::class, 'updateOrderStatus'])->name('orders.update-status');
 
     // Service Management
-    Route::get('/services', [AdminController::class, 'services'])->name('services');
-    Route::get('/services/create', [AdminController::class, 'createService'])->name('services.create');
-    Route::post('/services', [AdminController::class, 'storeService'])->name('services.store');
-    Route::get('/services/{id}/edit', [AdminController::class, 'editService'])->name('services.edit');
-    Route::put('/services/{id}', [AdminController::class, 'updateService'])->name('services.update');
-    Route::delete('/services/{id}', [AdminController::class, 'deleteService'])->name('services.delete');
-    Route::patch('/services/{id}/toggle-status', [AdminController::class, 'toggleServiceStatus'])->name('services.toggle-status');
+    Route::get('/services/create', [ServiceController::class, 'create'])->name('admin.services.create');
+    Route::post('/service-categories/store', [ServiceController::class, 'store'])->name('service-categories.store');
+    Route::get('/services', [ServiceController::class, 'services'])->name('services');
+    Route::get('/services/create', [ServiceController::class, 'createService'])->name('services.create');
+    Route::post('/services', [ServiceController::class, 'storeService'])->name('services.store');
+    Route::get('/services/{id}/edit', [ServiceController::class, 'editService'])->name('services.edit');
+    Route::put('/services/{id}', [ServiceController::class, 'updateService'])->name('services.update');
+    Route::delete('/services/{id}', [ServiceController::class, 'deleteService'])->name('services.delete');
+    Route::patch('/services/{id}/toggle-status', [ServiceController::class, 'toggleServiceStatus'])->name('services.toggle-status');
 
     // Blog Management
     Route::get('/blogs', [AdminController::class, 'blogs'])->name('blogs');

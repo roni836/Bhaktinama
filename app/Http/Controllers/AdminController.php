@@ -321,92 +321,11 @@ class AdminController extends Controller
     }
 
     // Service Management
-    public function services()
-    {
-        $services = Service::latest()->paginate(20);
-        return view('admin.services', compact('services'));
-    }
+    
 
-    public function createService()
-    {
+    
 
-        $response = Http::post('https://countriesnow.space/api/v0.1/countries/states', [
-            'country' => 'India'
-        ]);
-
-        $states = [];
-        if ($response->successful()) {
-            $data = $response->json();
-            if (isset($data['data']['states'])) {
-                $states = collect($data['data']['states'])->pluck('name');
-            }
-        }
-        return view('admin.add-service', compact('states'));
-    }
-
-    public function storeService(Request $request)
-    {
-        $validator = Validator::make($request->all(), [
-            'title' => 'required|string|max:255',
-            'short_description' => 'nullable|string|max:500',
-            'introduction' => 'nullable|string',
-            'importance' => 'nullable|string',
-            'traditions' => 'nullable|string',
-            'service_type' => 'nullable|string|max:100',
-            'location' => 'nullable|string|max:255',
-            'images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:5120',
-            'packages' => 'nullable|array',
-            'packages.*.name' => 'nullable|string|max:255',
-            'packages.*.price' => 'nullable|numeric|min:0',
-            'faqs' => 'nullable|array',
-            'faqs.*.question' => 'nullable|string|max:500',
-            'faqs.*.answer' => 'nullable|string',
-        ]);
-
-        if ($validator->fails()) {
-            return back()->withErrors($validator)->withInput();
-        }
-
-        $data = $request->all();
-
-        // Handle multiple image uploads
-        if ($request->hasFile('images')) {
-            $imagePaths = [];
-            foreach ($request->file('images') as $image) {
-                $imageName = time() . '_' . uniqid() . '.' . $image->extension();
-                $image->move(public_path('images/services'), $imageName);
-                $imagePaths[] = 'images/services/' . $imageName;
-            }
-            $data['images'] = $imagePaths;
-        }
-
-        // Filter out empty packages
-        if ($request->packages) {
-            $data['packages'] = array_filter($request->packages, function ($package) {
-                return !empty($package['name']) || !empty($package['price']);
-            });
-        }
-
-        // Filter out empty FAQs
-        if ($request->faqs) {
-            $data['faqs'] = array_filter($request->faqs, function ($faq) {
-                return !empty($faq['question']) || !empty($faq['answer']);
-            });
-        }
-
-        Service::create($data);
-
-        return redirect()->route('admin.services')->with('success', 'Service added successfully.');
-    }
-
-    public function toggleServiceStatus($id)
-    {
-        $service = Service::findOrFail($id);
-        $service->is_active = !$service->is_active;
-        $service->save();
-
-        return back()->with('success', 'Service status updated successfully.');
-    }
+    
 
     // Blog Management
     public function blogs()

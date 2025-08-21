@@ -11,9 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('pandits', function (Blueprint $table) {
+        Schema::create('service_faqs', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
+            $table->foreignId('service_id')->constrained('services')->onDelete('cascade');
+            $table->string('question');
+            $table->text('answer');
             $table->timestamps();
         });
     }
@@ -23,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('pandits');
+        Schema::dropIfExists('service_faqs');
     }
 };

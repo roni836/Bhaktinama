@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('bookings', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->foreignId('service_id')->constrained()->onDelete('cascade');
             $table->string('ceremony_type');
             $table->dateTime('ceremony_date');
             $table->string('location');
