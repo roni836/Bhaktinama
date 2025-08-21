@@ -59,7 +59,7 @@
             <h2 class="text-3xl font-bold mb-12 text-gradient">Available Online Service</h2>
             <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
                 <!-- Service Card 1 -->
-                <a href="{{route('bookpandit')}} " class="group transform transition-transform duration-500 hover:translate-x-4">
+                <a href="#" class="group transform transition-transform duration-500 hover:translate-x-4">
                     <div class="bg-white rounded-lg shadow-md overflow-hidden">
                         <div class="relative">
                             <img src="{{ asset('https://placehold.co/400x300/FEEBC8/FF7B00?text=Pandit') }}" alt="Pandit" class="w-full h-48 object-cover rounded-t-lg">
