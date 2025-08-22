@@ -9,22 +9,7 @@ class Booking extends Model
 {
     use HasFactory;
 
-    protected $fillable = [
-        'user_id',
-        'pandit_id',
-        'ceremony_type',
-        'ceremony_date',
-        'location',
-        'special_requests',
-        'status',
-        'amount',
-        'payment_status'
-    ];
-
-    protected $casts = [
-        'ceremony_date' => 'datetime',
-        'amount' => 'decimal:2',
-    ];
+    protected $guarded = [];
 
     public function user()
     {

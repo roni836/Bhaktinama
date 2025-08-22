@@ -4,8 +4,10 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\PanditController;
 use App\Http\Controllers\ServiceController;
+
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
+
 
 Route::get('/aa', [PanditController::class, 'aa'])->name("aa");
 Route::get('/curent', [PanditController::class, 'current'])->name("curent");
@@ -27,12 +29,18 @@ Route::get('/service-single-view/{id}', [UserController::class, 'show'])->name('
 Route::get('/kundalini', [UserController::class, 'kundalini'])->name("kundalini");
 Route::get('/annaprashan', [UserController::class, 'annaprashan'])->name("annaprashan");
 Route::get('/aa', [UserController::class, 'aa'])->name("aa");
+Route::get('/service-booking', [ServiceController::class, 'createBooking'])->name('service-booking');
+Route::post('/service-booking', [ServiceController::class, 'bookService'])->name('service-booking');
+Route::get('/select-pandit', [serviceController::class, 'index'])->name('select-pandit');
+Route::get('/select-pandit/{id}', [serviceController::class, 'show'])->name('select-pandit');
+
 
 // Pandit Dashboard Routes (Protected)
 
   Route::middleware(['auth', 'role:pandit'])->prefix('pandit')->name('pandit.')->group(function () {
     Route::get('/', [PanditController::class, 'dashboard'])->name('dashboard');
     Route::post('/change-password', [PanditController::class, 'changePassword'])->name('changePassword');
+
 
     Route::get('/bookings', [PanditController::class, 'bookings'])->name('bookings');
     Route::get('/profile', [PanditController::class, 'profile'])->name('profile');

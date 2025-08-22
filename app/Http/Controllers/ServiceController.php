@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Booking;
 use App\Models\Location;
+use App\Models\Pandit;
 use App\Models\Service;
 use App\Models\ServiceCategory;
 use Illuminate\Http\Request;
@@ -130,5 +132,65 @@ class ServiceController extends Controller
         $service->save();
 
         return back()->with('success', 'Service status updated successfully.');
+    }
+    public function createBooking()
+    {
+        return view('service-booking');
+    }
+    public function bookService(Request $request)
+    {
+        $request->validate([
+            'full_name'        => 'required|string|max:255',
+            'email'            => 'required|email',
+            'phone'            => 'required|string|max:20',
+            'street'           => 'required|string|max:255',
+            'city'             => 'required|string|max:100',
+            'state'            => 'required|string|max:100',
+            'zip'              => 'required|string|max:20',
+            'landmark'         => 'nullable|string|max:255',
+            'ceremony_date'    => 'required|date',
+            'ceremony_time'    => 'required',
+            'language'         => 'required|in:hindi,english',
+        ]);
+
+        $address = [
+            'street'   => $request->street,
+            'city'     => $request->city,
+            'state'    => $request->state,
+            'zip'      => $request->zip,
+            'landmark' => $request->landmark,
+        ];
+
+        Booking::create([
+            'booking_data' => $request->only([
+                'user_id'          => auth()->id(),
+                'service_id'       => $request->service_id,
+                'ceremony_date'    => $request->ceremony_date,
+                'ceremony_time'    => $request->ceremony_time,
+                'address'          => json_encode($address),
+                'special_requests' => $request->special_requests,
+                'language'         => $request->language,
+            ])
+        ]);
+
+        return redirect()->route('booking.create')->with('success', 'Booking created successfully!');
+    }
+    public function selectPandit()
+    {
+        $pandits = Pandit::where('is_active', true)->get(); // Example
+        return view('service-booking-step2', compact('pandits'));
+    }
+    public function index()
+    {
+        // Fetch all pandits from DB
+        $pandits = Pandit::all();
+
+        return view('select-pandit', compact('pandits'));
+    }
+
+    public function show($id)
+    {
+        $pandit = Pandit::findOrFail($id);
+        return view('select-pandit', compact('pandit'));
     }
 }
