@@ -59,7 +59,7 @@
                     </div>
                     <div class="flex items-center">
                         <div class="relative">
-                            <span class="text-gray-700">{{ Auth::guard('pandit')->user()->name }}</span>
+                            <span class="text-gray-700">ruchi</span>
                         </div>
                     </div>
                 </div>
