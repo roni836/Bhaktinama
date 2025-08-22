@@ -83,8 +83,7 @@ class UserController extends Controller
     }
     public function show($id)
     {
-        // Show single service details
-        $service = Service::findOrFail($id);
+        $service = Service::with('packages')->findOrFail($id);
         return view("service-single-view", compact('service'));
     }
     function astrology()

@@ -17,6 +17,10 @@ return [
             'provider' => 'users',
             'hash' => false,
         ],
+        'pandit' => [
+            'driver' => 'session',
+            'provider' => 'pandits',
+        ],
         // 'admin' => [   // 👈 add this
         //     'driver' => 'session',
         //     'provider' => 'users',
@@ -28,6 +32,11 @@ return [
             'driver' => 'eloquent',
             'model' => App\Models\User::class,
         ],
+        'pandits' => [
+        'driver' => 'eloquent',
+        'model' => App\Models\User::class, // Or App\Models\Pandit if separate model
+    ],
+
     ],
 
 
