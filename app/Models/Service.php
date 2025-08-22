@@ -23,8 +23,6 @@ class Service extends Model
         return $this->hasMany(ServicePackage::class, 'service_id', 'id');
     }
 
-
-
     public function faqs()
     {
         return $this->hasMany(ServiceFaq::class, 'service_id');
