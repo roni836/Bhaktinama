@@ -55,15 +55,6 @@ class UserController extends Controller
     {
         return view("register");
     }
-    public function adminlogin()
-    {
-        return view("adminlogin");
-    }
-
-    public function panditlogin()
-    {
-        return view("panditlogin");
-    }
     public function panditregister()
     {
         return view("panditregister");
