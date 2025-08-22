@@ -15,13 +15,14 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->foreignId('service_id')->constrained()->onDelete('cascade');
-            $table->string('ceremony_type');
+            $table->dateTime('ceremony_time');
             $table->dateTime('ceremony_date');
-            $table->string('location');
+            $table->json('address')->nullable();
             $table->text('special_requests')->nullable();
-            $table->string('status')->default('pending'); // e.g., pending, confirmed, completed, canceled
+            $table->enum('language', ['hindi', 'english',]);
+            $table->string('status')->default('pending');
             $table->decimal('amount', 10, 2)->nullable();
-            $table->string('payment_status')->default('pending'); // e.g., pending, paid
+            $table->string('payment_status')->default('pending');
             $table->timestamps();
         });
     }

@@ -7,13 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class Pandit extends Model
 {
-
-     use HasFactory;
+    use HasFactory;
     protected $guarded = [];
-
-
-    public function temple()
-    {
-        return $this->belongsTo(Temple::class);
-    }
 }

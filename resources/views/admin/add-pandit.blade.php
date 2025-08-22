@@ -68,7 +68,7 @@
         
 
             <div>
-                <input type="text" name="skills" placeholder="Enter the Skills"
+                <input type="text" name="specialization" placeholder="Enter the Specialization"
                     class="w-full border rounded-md px-4 py-2 focus:ring-2 focus:ring-orange-400 outline-none">
             </div>
 

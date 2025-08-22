@@ -73,9 +73,9 @@
 
                             <!-- Footer -->
                             <div class="p-4">
-                                <button class="w-full bg-orange-500 text-white py-3 rounded-full font-semibold hover:bg-orange-600 transition">
+                                <a href="{{ route('service-booking.create') }}" class="w-full flex justify-center bg-orange-500 text-white py-3 rounded-full font-semibold hover:bg-orange-600 transition">
                                     Continue
-                                </button>
+                                </a>
                             </div>
                         </div>
                     </div>
