@@ -63,58 +63,6 @@
                     </div>
                 </a>
                 @endforeach
-
-
-                <!-- Service Card 2 -->
-                <!-- <a href="{{route('astrology')}}" class="group transform transition-transform duration-500 hover:-translate-x-4">
-                    <div class="bg-white rounded-lg shadow-md overflow-hidden">
-                        <div class="relative">
-                            <img src="{{ asset('https://placehold.co/400x300/FEEBC8/FF7B00?text=Astrology') }}" alt="Astrology" class="w-full h-48 object-cover rounded-t-lg">
-                            <div class="absolute inset-0 bg-orange-500 opacity-0 group-hover:opacity-20 transition-opacity duration-300"></div>
-                        </div>
-                        <div class="p-6">
-                            <h3 class="text-xl font-semibold mb-2 group-hover:text-orange-500">Astrology Services</h3>
-                            <p class="text-gray-600">Expert astrological consultations</p>
-                            <div class="mt-4 text-orange-500 group-hover:translate-x-2 transition-transform duration-300">
-                                Learn More <i class="fas fa-arrow-right ml-2"></i>
-                            </div>
-                        </div>
-                    </div>
-                </a> -->
-
-                <!-- Service Card 3 -->
-                <!-- <a href="{{route('temple')}}" class="group">
-                    <div class="bg-white rounded-lg shadow-md overflow-hidden transform transition duration-300 hover:scale-105">
-                        <div class="relative">
-                            <img src="{{ asset('https://placehold.co/400x300/FEEBC8/FF7B00?text=Temple') }}" alt="Temple" class="w-full h-48 object-cover rounded-t-lg">
-                            <div class="absolute inset-0 bg-orange-500 opacity-0 group-hover:opacity-20 transition-opacity duration-300"></div>
-                        </div>
-                        <div class="p-6">
-                            <h3 class="text-xl font-semibold mb-2 group-hover:text-orange-500">Temple Service</h3>
-                            <p class="text-gray-600">Sacred temple ceremonies and rituals</p>
-                            <div class="mt-4 text-orange-500 group-hover:translate-x-2 transition-transform duration-300">
-                                Learn More <i class="fas fa-arrow-right ml-2"></i>
-                            </div>
-                        </div>
-                    </div>
-                </a> -->
-
-                <!-- Service Card 4 -->
-                <!-- <a href="{{route('kundalini')}}" class="group">
-                    <div class="bg-white rounded-lg shadow-md overflow-hidden transform transition duration-300 hover:scale-105">
-                        <div class="relative">
-                            <img src="{{ asset('https://placehold.co/400x300/FEEBC8/FF7B00?text=Kundalini') }}" alt="Kundalini" class="w-full h-48 object-cover rounded-t-lg">
-                            <div class="absolute inset-0 bg-orange-500 opacity-0 group-hover:opacity-20 transition-opacity duration-300"></div>
-                        </div>
-                        <div class="p-6">
-                            <h3 class="text-xl font-semibold mb-2 group-hover:text-orange-500">Kundalini</h3>
-                            <p class="text-gray-600">Spiritual awakening and guidance</p>
-                            <div class="mt-4 text-orange-500 group-hover:translate-x-2 transition-transform duration-300">
-                                Learn More <i class="fas fa-arrow-right ml-2"></i>
-                            </div>
-                        </div>
-                    </div>
-                </a> -->
             </div>
         </div>
     </section>

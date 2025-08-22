@@ -17,7 +17,11 @@ return new class extends Migration
             $table->foreignId('service_id')->constrained()->onDelete('cascade');
             $table->dateTime('ceremony_time');
             $table->dateTime('ceremony_date');
-            $table->json('address')->nullable();
+            $table->string('street_address')->nullable();
+            $table->string('city')->nullable();
+            $table->string('state')->nullable();
+            $table->string('zip')->nullable();
+            $table->string('landmark')->nullable();
             $table->text('special_requests')->nullable();
             $table->enum('language', ['hindi', 'english',]);
             $table->string('status')->default('pending');

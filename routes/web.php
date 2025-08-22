@@ -31,13 +31,13 @@ Route::get('/annaprashan', [UserController::class, 'annaprashan'])->name("annapr
 Route::get('/aa', [UserController::class, 'aa'])->name("aa");
 Route::get('/service-booking', [ServiceController::class, 'createBooking'])->name('service-booking');
 Route::post('/service-booking', [ServiceController::class, 'bookService'])->name('service-booking');
-Route::get('/select-pandit', [serviceController::class, 'index'])->name('select-pandit');
+Route::get('/select-pandits', [serviceController::class, 'index'])->name('select-pandits');
 Route::get('/select-pandit/{id}', [serviceController::class, 'show'])->name('select-pandit');
 
 
 // Pandit Dashboard Routes (Protected)
 
-  Route::middleware(['auth', 'role:pandit'])->prefix('pandit')->name('pandit.')->group(function () {
+Route::middleware(['auth', 'role:pandit'])->prefix('pandit')->name('pandit.')->group(function () {
     Route::get('/', [PanditController::class, 'dashboard'])->name('dashboard');
     Route::post('/change-password', [PanditController::class, 'changePassword'])->name('changePassword');
 
@@ -123,7 +123,9 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::delete('/temples/{id}', [AdminController::class, 'deleteTemple'])->name('temples.delete');
     Route::patch('/temples/{id}/toggle-status', [AdminController::class, 'toggleTempleStatus'])->name('temples.toggle-status');
 
-    // Product Management
+
+    Route::get('/product-categories', [AdminController::class, 'createProductCategory'])->name('product-categories.create');
+    Route::post('/product-categories/store', [AdminController::class, 'storeProductCategory'])->name('product-categories.store');
     Route::get('/products', [AdminController::class, 'products'])->name('products');
     Route::get('/products/create', [AdminController::class, 'createProduct'])->name('products.create');
     Route::post('/products', [AdminController::class, 'storeProduct'])->name('products.store');

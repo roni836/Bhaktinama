@@ -318,6 +318,7 @@
         // Add image preview functionality here if needed
     });
 </script>
+
 <script>
     const modal = document.getElementById('categoryModal');
     const openBtn = document.getElementById('openCategoryModal');
@@ -332,6 +333,5 @@
         modal.classList.add('hidden');
     });
 </script>
-
 
 @endsection

@@ -20,7 +20,7 @@ class PanditController extends Controller
             ->take(5)
             ->get();
 
-        return view('pandit.dashboard', compact('pandit', 'bookings'));
+        return view('pandit.dashboard', compact('bookings'));
     }
 
     // Show pandit bookings

@@ -53,15 +53,14 @@
                     <!-- Left icons -->
                     <div class="flex space-x-3">
                         <!-- Edit -->
-                        <a href="{{ route('admin.products.edit', $product->id) }}" 
-                           class="text-orange-500 hover:text-orange-600">
+                        <a href="#" class="text-orange-500 hover:text-orange-600">
                             <i class="fas fa-edit"></i>
                         </a>
 
                         <!-- Info -->
-                        <a href="{{ route('admin.products.show', $product->id) }}" 
-                           class="text-blue-500 hover:text-blue-600">
-                            <i class="fas fa-info-circle"></i>
+                        <a href="#" 
+                           class="text-black hover:text-blue-600">
+                            <i class="fas fa-trash"></i>
                         </a>
                     </div>
 

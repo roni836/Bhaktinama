@@ -5,6 +5,46 @@
 @section('header', 'Dashboard')
 
 @section('content')
+    @php
+        // Dummy Bookings Collection
+        $bookings = collect([
+            (object)[
+                'ceremony_type' => 'Satyanarayan Puja',
+                'ceremony_date' => now()->addDays(3),
+                'location' => 'Patna, Bihar',
+                'status' => 'confirmed',
+                'payment_status' => 'paid',
+                'amount' => 5000
+            ],
+            (object)[
+                'ceremony_type' => 'Griha Pravesh',
+                'ceremony_date' => now()->subDays(5),
+                'location' => 'Ranchi, Jharkhand',
+                'status' => 'completed',
+                'payment_status' => 'paid',
+                'amount' => 8000
+            ],
+            (object)[
+                'ceremony_type' => 'Marriage Ceremony',
+                'ceremony_date' => now()->addDays(10),
+                'location' => 'Gaya, Bihar',
+                'status' => 'confirmed',
+                'payment_status' => 'unpaid',
+                'amount' => 12000
+            ],
+        ]);
+
+        // Dummy Pandit Profile
+        $pandit = (object)[
+            'name' => 'Pandit Ram Kumar',
+            'specialization' => 'Vedic Rituals',
+            'email' => 'pandit.ram@example.com',
+            'phone' => '9876543210',
+            'location' => 'Patna, Bihar',
+            'profile_image' => null,
+        ];
+    @endphp
+
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
         <!-- Stats Card 1 -->
         <div class="bg-white rounded-lg shadow p-6">
@@ -14,7 +54,9 @@
                 </div>
                 <div class="ml-4">
                     <p class="text-gray-500 text-sm">Upcoming Bookings</p>
-                    <h3 class="text-2xl font-semibold text-gray-700">{{ $bookings->where('status', 'confirmed')->where('ceremony_date', '>', now())->count() }}</h3>
+                    <h3 class="text-2xl font-semibold text-gray-700">
+                        {{ $bookings->where('status', 'confirmed')->where('ceremony_date', '>', now())->count() }}
+                    </h3>
                 </div>
             </div>
         </div>
@@ -27,7 +69,9 @@
                 </div>
                 <div class="ml-4">
                     <p class="text-gray-500 text-sm">Completed Ceremonies</p>
-                    <h3 class="text-2xl font-semibold text-gray-700">{{ $bookings->where('status', 'completed')->count() }}</h3>
+                    <h3 class="text-2xl font-semibold text-gray-700">
+                        {{ $bookings->where('status', 'completed')->count() }}
+                    </h3>
                 </div>
             </div>
         </div>
@@ -40,7 +84,9 @@
                 </div>
                 <div class="ml-4">
                     <p class="text-gray-500 text-sm">Total Earnings</p>
-                    <h3 class="text-2xl font-semibold text-gray-700">₹{{ $bookings->where('payment_status', 'paid')->sum('amount') }}</h3>
+                    <h3 class="text-2xl font-semibold text-gray-700">
+                        ₹{{ $bookings->where('payment_status', 'paid')->sum('amount') }}
+                    </h3>
                 </div>
             </div>
         </div>
@@ -71,7 +117,7 @@
                         @endforeach
                     </div>
                     <div class="mt-4 text-center">
-                        <a href="{{ route('pandit.bookings') }}" class="text-orange-500 hover:underline">View All Bookings</a>
+                        <a href="#" class="text-orange-500 hover:underline">View All Bookings</a>
                     </div>
                 @else
                     <p class="text-gray-500 text-center py-4">No upcoming bookings</p>
@@ -103,21 +149,17 @@
                         <i class="fas fa-envelope text-gray-500 w-6"></i>
                         <span class="text-gray-700 ml-2">{{ $pandit->email }}</span>
                     </div>
-                    @if($pandit->phone)
                     <div class="flex items-center">
                         <i class="fas fa-phone text-gray-500 w-6"></i>
                         <span class="text-gray-700 ml-2">{{ $pandit->phone }}</span>
                     </div>
-                    @endif
-                    @if($pandit->location)
                     <div class="flex items-center">
                         <i class="fas fa-map-marker-alt text-gray-500 w-6"></i>
                         <span class="text-gray-700 ml-2">{{ $pandit->location }}</span>
                     </div>
-                    @endif
                 </div>
                 <div class="mt-6 text-center">
-                    <a href="{{ route('pandit.profile') }}" class="text-orange-500 hover:underline">Edit Profile</a>
+                    <a href="#" class="text-orange-500 hover:underline">Edit Profile</a>
                 </div>
             </div>
         </div>

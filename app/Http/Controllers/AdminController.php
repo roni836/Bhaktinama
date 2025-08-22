@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers;
 
 use App\Models\Blog;
@@ -8,6 +9,7 @@ use App\Models\Location;
 use App\Models\Order;
 use App\Models\Pandit;
 use App\Models\Product;
+use App\Models\ProductCategory;
 use App\Models\Service;
 use App\Models\Temple;
 use App\Models\User;
@@ -196,39 +198,6 @@ class AdminController extends Controller
         return view('admin.products', compact('products'));
     }
 
-    public function createProduct()
-    {
-        return view('admin.add-product');
-    }
-
-    public function storeProduct(Request $request)
-    {
-        $validator = Validator::make($request->all(), [
-            'name'           => 'required|string|max:255',
-            'description'    => 'required|string',
-            'price'          => 'required|numeric|min:0',
-            'category'       => 'required|string|max:255',
-            'stock_quantity' => 'required|integer|min:0',
-            'image'          => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-        ]);
-
-        if ($validator->fails()) {
-            return back()->withErrors($validator)->withInput();
-        }
-
-        $data = $request->all();
-
-        // Handle image upload
-        if ($request->hasFile('image')) {
-            $imageName = time() . '.' . $request->image->extension();
-            $request->image->move(public_path('images/products'), $imageName);
-            $data['image'] = 'images/products/' . $imageName;
-        }
-
-        Product::create($data);
-
-        return redirect()->route('admin.products')->with('success', 'Product added successfully.');
-    }
 
     // Orders Management
     public function orders()
@@ -246,79 +215,6 @@ class AdminController extends Controller
         return back()->with('success', 'Order status updated successfully.');
     }
 
-    // Temple Management
-    public function temples()
-    {
-        $temples = Temple::latest()->paginate(20);
-        return view('admin.temples', compact('temples'));
-    }
-
-    public function createTemple()
-    {
-        return view('admin.add-temple');
-    }
-
-    public function storeTemple(Request $request)
-    {
-        $validator = Validator::make($request->all(), [
-
-            'name'                => 'required|string|max:255',
-            'short_description'   => 'nullable|string',
-            'overall_description' => 'nullable|string',
-            'location'            => 'nullable|string',
-            'visiting_info'       => 'nullable|string',
-            'facilities'          => 'nullable|string',
-            'images.*'            => 'nullable|image|mimes:jpg,png,jpeg|max:2048',
-            'packages'            => 'array',
-            'packages.*.name'     => 'required_with:packages|string',
-            'packages.*.price'    => 'required_with:packages|numeric',
-        ]);
-
-        $images = [];
-        if ($request->hasFile('images')) {
-            foreach ($request->file('images') as $file) {
-                $path     = $file->store('temples', 'public');
-                $images[] = $path;
-            }
-        }
-
-        $temple = Temple::create([
-            'name'                => $request->name,
-            'short_description'   => $request->short_description,
-            'overall_description' => $request->overall_description,
-            'location'            => $request->location,
-            'visiting_info'       => $request->visiting_info,
-            'facilities'          => $request->facilities,
-            'images'              => $images,
-        ]);
-
-        if ($request->has('packages') && is_array($request->packages)) {
-            foreach ($request->packages as $package) {
-                $temple->packages()->create([
-                    'name'  => $package['name'],
-                    'price' => $package['price'],
-                ]);
-            }
-        }
-
-        $temple->save();
-
-        return redirect()->route('admin.temples')->with('success', 'Temple added successfully.');
-    }
-
-    public function toggleTempleStatus($id)
-    {
-        $temple            = Temple::findOrFail($id);
-        $temple->is_active = ! $temple->is_active;
-        $temple->save();
-
-        return back()->with('success', 'Temple status updated successfully.');
-    }
-
-    // Service Management
-
-
-    // Blog Management
     public function blogs()
     {
         $blogs     = Blog::latest()->paginate(20);
@@ -387,61 +283,6 @@ class AdminController extends Controller
         return back()->with('success', 'Blog status updated successfully.');
     }
 
-    public function editProduct($id)
-    {
-        $product = Product::findOrFail($id);
-        return view('admin.edit-product', compact('product'));
-    }
-
-    public function updateProduct(Request $request, $id)
-    {
-        $product = Product::findOrFail($id);
-
-        $validator = Validator::make($request->all(), [
-            'name'           => 'required|string|max:255',
-            'description'    => 'required|string',
-            'price'          => 'required|numeric|min:0',
-            'category'       => 'required|string|max:255',
-            'stock_quantity' => 'required|integer|min:0',
-            'image'          => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-        ]);
-
-        if ($validator->fails()) {
-            return back()->withErrors($validator)->withInput();
-        }
-
-        $data = $request->all();
-
-        // Handle image upload
-        if ($request->hasFile('image')) {
-            // Delete old image if exists
-            if ($product->image && file_exists(public_path('images/products/' . basename($product->image)))) {
-                unlink(public_path('images/products/' . basename($product->image)));
-            }
-
-            $imageName = time() . '.' . $request->image->extension();
-            $request->image->move(public_path('images/products'), $imageName);
-            $data['image'] = 'images/products/' . $imageName;
-        }
-
-        $product->update($data);
-
-        return redirect()->route('admin.products')->with('success', 'Product updated successfully.');
-    }
-
-    public function deleteProduct($id)
-    {
-        $product = Product::findOrFail($id);
-
-        // Delete associated image if exists
-        if ($product->image && file_exists(public_path('images/products/' . basename($product->image)))) {
-            unlink(public_path('images/products/' . basename($product->image)));
-        }
-
-        $product->delete();
-
-        return back()->with('success', 'Product deleted successfully.');
-    }
 
     public function editTemple($id)
     {
@@ -449,62 +290,6 @@ class AdminController extends Controller
         return view('admin.edit-temple', compact('temple'));
     }
 
-    public function updateTemple(Request $request, $id)
-    {
-        $temple = Temple::findOrFail($id);
-
-        $validator = Validator::make($request->all(), [
-            'name'        => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'location'    => 'required|string|max:255',
-            'address'     => 'required|string',
-            'phone'       => 'nullable|string|max:20',
-            'email'       => 'nullable|email|max:255',
-            'website'     => 'nullable|url|max:255',
-            'deity'       => 'nullable|string|max:255',
-            'timings'     => 'nullable|string|max:255',
-            'entry_fee'   => 'nullable|numeric|min:0',
-            'latitude'    => 'nullable|numeric|between:-90,90',
-            'longitude'   => 'nullable|numeric|between:-180,180',
-            'image'       => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-        ]);
-
-        if ($validator->fails()) {
-            return back()->withErrors($validator)->withInput();
-        }
-
-        $data = $request->all();
-
-        // Handle image upload
-        if ($request->hasFile('image')) {
-            // Delete old image if exists
-            if ($temple->image && file_exists(public_path('images/temples/' . basename($temple->image)))) {
-                unlink(public_path('images/temples/' . basename($temple->image)));
-            }
-
-            $imageName = time() . '.' . $request->image->extension();
-            $request->image->move(public_path('images/temples'), $imageName);
-            $data['image'] = 'images/temples/' . $imageName;
-        }
-
-        $temple->update($data);
-
-        return redirect()->route('admin.temples')->with('success', 'Temple updated successfully.');
-    }
-
-    public function deleteTemple($id)
-    {
-        $temple = Temple::findOrFail($id);
-
-        // Delete associated image if exists
-        if ($temple->image && file_exists(public_path('images/temples/' . basename($temple->image)))) {
-            unlink(public_path('images/temples/' . basename($temple->image)));
-        }
-
-        $temple->delete();
-
-        return back()->with('success', 'Temple deleted successfully.');
-    }
 
     public function editService($id)
     {
@@ -594,5 +379,118 @@ class AdminController extends Controller
         $service->delete();
 
         return back()->with('success', 'Service deleted successfully.');
+    }
+
+
+    public function createProductCategory()
+    {
+        return view('admin.product-categories.create');
+    }
+
+    // Store category
+    public function storeProductCategory(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255'
+        ]);
+
+        ProductCategory::create([
+            'name' => $request->name,
+        ]);
+
+        return redirect()->back()->with('success', 'Product Category created successfully!');
+    }
+    public function createProduct()
+    {
+        $productCategories = ProductCategory::all();
+        $services = Service::all();
+        $locations = Location::all();
+        return view('admin.add-product', compact('productCategories', 'services', 'locations'));
+    }
+    public function storeProduct(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'name'                => 'required|string|max:255',
+            'description'         => 'required|string',
+            'price'               => 'required|numeric|min:0',
+            'product_category_id' => 'required|exists:product_categories,id',
+            'service_id'          => 'required|exists:services,id',
+            'location_id'         => 'nullable|exists:locations,id',
+            'quantity'            => 'required|integer|min:0',
+            'image'               => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+        ]);
+
+        if ($validator->fails()) {
+            return back()->withErrors($validator)->withInput();
+        }
+
+        $data = $validator->validated();
+
+        // Handle image upload
+        if ($request->hasFile('image')) {
+            $imageName = time() . '.' . $request->image->extension();
+            $request->image->move(public_path('images/products'), $imageName);
+            $data['image'] = 'images/products/' . $imageName;
+        }
+
+        Product::create($data);
+
+        return redirect()->route('admin.products')->with('success', 'Product added successfully.');
+    }
+
+    public function editProduct($id)
+    {
+        $product = Product::findOrFail($id);
+        return view('admin.edit-product', compact('product'));
+    }
+
+    public function updateProduct(Request $request, $id)
+    {
+        $product = Product::findOrFail($id);
+
+        $validator = Validator::make($request->all(), [
+            'name'           => 'required|string|max:255',
+            'description'    => 'required|string',
+            'price'          => 'required|numeric|min:0',
+            'category'       => 'required|string|max:255',
+            'stock_quantity' => 'required|integer|min:0',
+            'image'          => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+        ]);
+
+        if ($validator->fails()) {
+            return back()->withErrors($validator)->withInput();
+        }
+
+        $data = $request->all();
+
+        // Handle image upload
+        if ($request->hasFile('image')) {
+            // Delete old image if exists
+            if ($product->image && file_exists(public_path('images/products/' . basename($product->image)))) {
+                unlink(public_path('images/products/' . basename($product->image)));
+            }
+
+            $imageName = time() . '.' . $request->image->extension();
+            $request->image->move(public_path('images/products'), $imageName);
+            $data['image'] = 'images/products/' . $imageName;
+        }
+
+        $product->update($data);
+
+        return redirect()->route('admin.products')->with('success', 'Product updated successfully.');
+    }
+
+    public function deleteProduct($id)
+    {
+        $product = Product::findOrFail($id);
+
+        // Delete associated image if exists
+        if ($product->image && file_exists(public_path('images/products/' . basename($product->image)))) {
+            unlink(public_path('images/products/' . basename($product->image)));
+        }
+
+        $product->delete();
+
+        return back()->with('success', 'Product deleted successfully.');
     }
 }

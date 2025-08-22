@@ -117,7 +117,7 @@
                 <!-- Buttons -->
                 <div class="flex justify-between">
                     <a href="/" class="px-6 py-2 border rounded text-gray-700 hover:bg-gray-100">← Back</a>
-                    <a href="{{ route('select-pandit') }}" class="px-6 py-2 bg-orange-500 text-white rounded hover:bg-orange-600">Continue →</a>
+                    <a href="{{ route('select-pandits') }}" class="px-6 py-2 bg-orange-500 text-white rounded hover:bg-orange-600">Continue →</a>
                 </div>
         </form>
     </div>
