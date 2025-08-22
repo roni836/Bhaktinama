@@ -1,74 +1,74 @@
 <?php
-
 namespace App\Http\Controllers;
 
+use App\Models\blog;
+use App\Models\Booking;
+use App\Models\Contact;
+use App\Models\Order;
+use App\Models\Product;
+use App\Models\Service;
+use App\Models\ServiceCategory;
+use App\Models\Temple;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
-use App\Models\User;
-use App\Models\Booking;
-use App\Models\Order;
-use App\Models\Service;
-use App\Models\blog;
-use App\Models\Temple;
-use App\Models\Product;
-use App\Models\ServiceCategory;
 
 class UserController extends Controller
 {
-    function index()
+    public function index()
     {
         return view("welcome");
     }
 
-    function services()
+    public function services()
     {
         $data['categories'] = ServiceCategory::all();
-        $data['services'] = Service::where('id', 3)->get();
+        $data['services']   = Service::where('id', 3)->get();
         return view("services", $data);
     }
-    function shop()
+    public function shop()
     {
         $data['shop'] = Product::all();
         return view("shop", $data, $data);
     }
-    function about()
+    public function about()
     {
         return view("about");
     }
-    function blog()
+    public function blog()
     {
         $data['blog'] = Blog::all();
         return view("blog", $data);
     }
-    function contact()
+    public function contact()
     {
         return view("contact");
     }
-    function login()
+    public function login()
     {
         return view("login");
     }
-    function register()
+    public function register()
     {
         return view("register");
     }
-    function adminlogin()
+    public function adminlogin()
     {
         return view("adminlogin");
     }
 
-    function panditlogin()
+    public function panditlogin()
     {
         return view("panditlogin");
     }
-    function panditregister()
+    public function panditregister()
     {
         return view("panditregister");
     }
-    function bookpandit($id)
+    public function bookpandit($id)
     {
         $data['bookpandit'] = Service::all();
         $data['categories'] = ServiceCategory::findOrFail($id);
@@ -87,41 +87,40 @@ class UserController extends Controller
         $service = Service::findOrFail($id);
         return view("service-single-view", compact('service'));
     }
-    function astrology()
+    public function astrology()
     {
 
         return view("astrology");
     }
-    function temple()
+    public function temple()
     {
         $data['temple'] = Temple::all();
         return view("temple", $data);
     }
-    function kundalini()
+    public function kundalini()
     {
 
         return view("kundalini");
     }
-    function aa()
+    public function aa()
     {
 
         return view("aa");
     }
 
-    function annaprashan()
+    public function annaprashan()
     {
         return view("annaprashan");
     }
 
     // User Authentication Methods
 
-
     public function registerUser(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'full_name' => 'required|string|max:255',
+            'full_name'   => 'required|string|max:255',
             'email_phone' => 'required|string',
-            'password' => 'required|string|min:8|confirmed',
+            'password'    => 'required|string|min:8|confirmed',
         ]);
 
         if ($validator->fails()) {
@@ -132,7 +131,7 @@ class UserController extends Controller
         $isEmail = filter_var($request->email_phone, FILTER_VALIDATE_EMAIL);
 
         // Create user
-        $user = new User();
+        $user       = new User();
         $user->name = $request->full_name;
 
         if ($isEmail) {
@@ -207,10 +206,10 @@ class UserController extends Controller
         $user = Auth::user();
 
         $validator = Validator::make($request->all(), [
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users,email,' . $user->id,
-            'phone' => 'nullable|string|max:20|unique:users,phone,' . $user->id,
-            'address' => 'nullable|string|max:255',
+            'name'          => 'required|string|max:255',
+            'email'         => 'required|string|email|max:255|unique:users,email,' . $user->id,
+            'phone'         => 'nullable|string|max:20|unique:users,phone,' . $user->id,
+            'address'       => 'nullable|string|max:255',
             'profile_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
@@ -218,9 +217,9 @@ class UserController extends Controller
             return back()->withErrors($validator)->withInput();
         }
 
-        $user->name = $request->name;
-        $user->email = $request->email;
-        $user->phone = $request->phone;
+        $user->name    = $request->name;
+        $user->email   = $request->email;
+        $user->phone   = $request->phone;
         $user->address = $request->address;
 
         if ($request->hasFile('profile_image')) {
@@ -230,7 +229,7 @@ class UserController extends Controller
             }
 
             // Store new image
-            $imagePath = $request->file('profile_image')->store('profile-images', 'public');
+            $imagePath           = $request->file('profile_image')->store('profile-images', 'public');
             $user->profile_image = $imagePath;
         }
 
@@ -278,7 +277,7 @@ class UserController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'current_password' => 'required',
-            'new_password' => 'required|string|min:8|confirmed',
+            'new_password'     => 'required|string|min:8|confirmed',
         ]);
 
         if ($validator->fails()) {
@@ -288,7 +287,7 @@ class UserController extends Controller
         $user = Auth::user();
 
         // Check if current password is correct
-        if (!Hash::check($request->current_password, $user->password)) {
+        if (! Hash::check($request->current_password, $user->password)) {
             return back()->withErrors(['current_password' => 'Current password is incorrect.']);
         }
 
@@ -297,5 +296,34 @@ class UserController extends Controller
         $user->save();
 
         return redirect()->route('user.profile')->with('success', 'Password updated successfully');
+    }
+
+    public function contactSubmit(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'firstName' => 'required|string|max:255',
+            'lastName'  => 'nullable|string|max:255',
+            'email'     => 'required|email|max:255',
+            'message'   => 'nullable|string|max:1000',
+        ]);
+
+        if ($validator->fails()) {
+            return back()->withErrors($validator)->withInput();
+        }
+
+        $contact = Contact::create([
+            'firstName' => $request->firstName,
+            'lastName'  => $request->lastName,
+            'email'      => $request->email,
+            'phone'      => $request->phone,
+            'message'    => $request->message,
+        ]);
+
+        if ($contact) {
+            return redirect()->back()->with('success', 'Thank you for contacting us!');
+        } else {
+            return back()->withErrors(['error' => 'Failed to submit your contact request. Please try again later.'])->withInput();
+        }
+
     }
 }

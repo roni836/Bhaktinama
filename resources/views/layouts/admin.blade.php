@@ -91,6 +91,11 @@
                             class="{{ request()->routeIs('admin.blogs.*') ? 'text-[#FF6B00] font-semibold' : 'hover:text-[#FF6B00]' }}">
                             Blogs
                         </a>
+
+                        <a href="{{ url('/admin/contacts') }}"
+                            class="{{ request()->is('admin/contacts') ? 'text-[#FF6B00] font-semibold' : 'hover:text-[#FF6B00]' }}">
+                            Contacts 
+                        </a>
                     </nav>
 
 

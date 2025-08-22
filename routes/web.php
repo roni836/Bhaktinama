@@ -17,6 +17,7 @@ Route::get('/shop', [UserController::class, 'shop'])->name("shop");
 Route::get('/about', [UserController::class, 'about'])->name("about");
 Route::get('/blog', [UserController::class, 'blog'])->name("blog");
 Route::get('/contact', [UserController::class, 'contact'])->name("contact");
+Route::post('/contact', [UserController::class, 'contactSubmit'])->name("contact.submit");
 // Route::get('/login',[UserController::class,'login'])->name("login");
 // Route::get('/register',[UserController::class,'register'])->name("register");
 // Route::get('/adminlogin',[UserController::class,'adminlogin'])->name("adminlogin");
@@ -151,6 +152,8 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::get('/bookings', [AdminController::class, 'bookings'])->name('bookings');
     Route::patch('/bookings/{id}/status', [AdminController::class, 'updateBookingStatus'])->name('bookings.update-status');
 
+    Route::get('/contacts', [AdminController::class, 'contacts'])->name('admin.contacts');
+
     // Pandit Management
     Route::get('/pandits', [AdminController::class, 'pandits'])->name('pandits');
     Route::get('/pandits/create', [AdminController::class, 'createPandit'])->name('pandits.create');
@@ -191,6 +194,7 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
 
     // Blog Management
     Route::get('/blogs', [AdminController::class, 'blogs'])->name('blogs');
+    Route::get('/blogs/{id}', [AdminController::class, 'blogs'])->name('admin.blogs.edit');
     Route::get('/blogs/create', [AdminController::class, 'createBlog'])->name('blogs.create');
     Route::post('/blogs', [AdminController::class, 'storeBlog'])->name('blogs.store');
     Route::patch('/blogs/{id}/toggle-status', [AdminController::class, 'toggleBlogStatus'])->name('blogs.toggle-status');

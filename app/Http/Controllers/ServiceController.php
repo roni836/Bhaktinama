@@ -47,7 +47,7 @@ class ServiceController extends Controller
     public function services()
     {
         $categories = ServiceCategory::all();
-        $locations = Location::all();
+        $locations = Location::where('is_active', true)->get();
 
         $services = Service::latest()->paginate(20);
         return view('admin.services', compact('services', 'categories', 'locations'));
