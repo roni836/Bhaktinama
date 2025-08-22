@@ -1,11 +1,11 @@
 <?php
 
-use App\Http\Controllers\AuthController;
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\UserController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\PanditController;
 use App\Http\Controllers\ServiceController;
+use App\Http\Controllers\UserController;
+use Illuminate\Support\Facades\Route;
 
 Route::get('/aa', [PanditController::class, 'aa'])->name("aa");
 Route::get('/curent', [PanditController::class, 'current'])->name("curent");
@@ -28,11 +28,11 @@ Route::get('/kundalini', [UserController::class, 'kundalini'])->name("kundalini"
 Route::get('/annaprashan', [UserController::class, 'annaprashan'])->name("annaprashan");
 Route::get('/aa', [UserController::class, 'aa'])->name("aa");
 
-
 // Pandit Dashboard Routes (Protected)
-Route::middleware(['auth:pandit'])->prefix('pandit')->name('pandit.')->group(function () {
-    Route::get('/dashboard', [PanditController::class, 'dashboard'])->name('dashboard');
-    Route::post('/pandit/change-password', [PanditController::class, 'changePassword'])->name('changePassword');
+
+  Route::middleware(['auth', 'role:pandit'])->prefix('pandit')->name('pandit.')->group(function () {
+    Route::get('/', [PanditController::class, 'dashboard'])->name('dashboard');
+    Route::post('/change-password', [PanditController::class, 'changePassword'])->name('changePassword');
 
     Route::get('/bookings', [PanditController::class, 'bookings'])->name('bookings');
     Route::get('/profile', [PanditController::class, 'profile'])->name('profile');
@@ -65,7 +65,7 @@ Route::post('/register', [UserController::class, 'registerUser'])->name('registe
 Route::post('/logout', [UserController::class, 'logout'])->name('logout');
 
 // User Dashboard Routes (Protected)
-Route::middleware(['auth'])->prefix('user')->name('user.')->group(function () {
+Route::middleware(['auth', 'role:user'])->prefix('user')->name('user.')->group(function () {
     Route::get('/dashboard', [UserController::class, 'dashboard'])->name('dashboard');
     Route::get('/profile', [UserController::class, 'profile'])->name('profile');
     Route::get('/profile/edit', [UserController::class, 'editProfile'])->name('profile.edit');
@@ -84,6 +84,8 @@ Route::get('auth/google/callback', [AuthController::class, 'callback']);
 
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
 Route::post('/login', [AuthController::class, 'login'])->name('login.submit');
+
+
 Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/', [AdminController::class, 'dashboard'])->name('dashboard');
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
@@ -142,4 +144,25 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::get('/blogs/create', [AdminController::class, 'createBlog'])->name('blogs.create');
     Route::post('/blogs', [AdminController::class, 'storeBlog'])->name('blogs.store');
     Route::patch('/blogs/{id}/toggle-status', [AdminController::class, 'toggleBlogStatus'])->name('blogs.toggle-status');
+});
+
+// Admin routes
+Route::middleware(['auth', 'role:admin'])->group(function () {
+    Route::get('/admin/test', function () {
+        return 'Admin Testing';
+    });
+});
+
+// Pandit routes
+Route::middleware(['auth', 'role:pandit'])->group(function () {
+    Route::get('/pandit/test', function () {
+        return 'Pandit Testing';
+    });
+});
+
+// User routes
+Route::middleware(['auth', 'role:user'])->group(function () {
+    Route::get('/user/test', function () {
+        return 'User Testing';
+    });
 });

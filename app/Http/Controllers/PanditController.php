@@ -14,8 +14,8 @@ class PanditController extends Controller
     // Show pandit dashboard
     public function dashboard()
     {
-        $pandit = Auth::guard('pandit')->user();
-        $bookings = Booking::where('pandit_id', $pandit->id)
+        $user = Auth::user();
+        $bookings = Booking::where('id', $user->id)
             ->orderBy('ceremony_date', 'desc')
             ->take(5)
             ->get();
@@ -26,7 +26,7 @@ class PanditController extends Controller
     // Show pandit bookings
     public function bookings()
     {
-        $pandit = Auth::guard('pandit')->user();
+        $pandit = Auth::user();
         $bookings = Booking::where('pandit_id', $pandit->id)
             ->orderBy('ceremony_date', 'desc')
             ->paginate(10);
@@ -37,14 +37,14 @@ class PanditController extends Controller
     // Show pandit profile
     public function profile()
     {
-        $pandit = Auth::guard('pandit')->user();
+        $pandit = Auth::user();
         return view('pandit.profile', compact('pandit'));
     }
 
     // Update pandit profile
     public function updateProfile(Request $request)
     {
-        $pandit = Auth::guard('pandit')->user();
+        $pandit = Auth::user();
 
         $validated = $request->validate([
             'name' => 'required|string|max:255',
@@ -80,7 +80,7 @@ class PanditController extends Controller
             'password' => 'required|string',
         ]);
 
-        if (Auth::guard('pandit')->attempt($credentials, $request->filled('remember'))) {
+        if (Auth::attempt($credentials, $request->filled('remember'))) {
             $request->session()->regenerate();
             return redirect()->intended(route('pandit.dashboard'));
         }
@@ -110,7 +110,7 @@ class PanditController extends Controller
 
         $pandit = Pandit::create($validated);
 
-        Auth::guard('pandit')->login($pandit);
+        Auth::login($pandit);
 
         return redirect()->route('pandit.dashboard');
     }
@@ -118,7 +118,7 @@ class PanditController extends Controller
     // Logout
     public function logout(Request $request)
     {
-        Auth::guard('pandit')->logout();
+        Auth::logout();
 
         $request->session()->invalidate();
         $request->session()->regenerateToken();
@@ -136,7 +136,7 @@ class PanditController extends Controller
             return back()->withErrors($validator);
         }
 
-        $pandit = Auth::guard('pandit')->user(); // if you have pandit guard
+        $pandit = Auth::user(); // if you have pandit guard
 
         if (!Hash::check($request->current_password, $pandit->password)) {
             return back()->withErrors(['current_password' => 'Current password is incorrect.']);
