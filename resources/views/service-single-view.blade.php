@@ -31,49 +31,124 @@
                     <p class="text-gray-600 mt-2 md:mt-0"><span class="font-semibold text-gray-700">Location:</span>{{$service->location}}</p>
                 </div>
 
-                <!-- Button -->
-                <a href="#" class="bg-[#1F2B50] w-full flex justify-center text-white px-6 py-3 rounded-full hover:bg-gray-900">View Package</a>
+
+                <a href="#" id="viewPackageBtn" class="bg-[#1F2B50] w-full flex justify-center text-white px-6 py-3 rounded-full hover:bg-gray-900">
+                    View Package
+                </a>
+                <!-- Modal Background -->
+                <div id="packageModal" class="fixed inset-0 bg-black bg-opacity-50 hidden justify-center items-center z-50">
+                    <!-- Modal Box -->
+                    <div class="bg-white rounded w-full max-w-md shadow overflow-hidden">
+
+                        <!-- Header -->
+                        <div class="flex justify-between items-center p-6 border-b">
+                            <h2 class="text-lg font-semibold">Select Package for {{ $service->title }}</h2>
+                            <button id="closeModal" class="text-gray-500 hover:text-gray-800 text-2xl">&times;</button>
+                        </div>
+
+                        <!-- Package List -->
+                        <div class="divide-y px-2">
+                            @if($service->packages->count())
+
+                            @foreach($service->packages as $package)
+                            <label class="flex justify-between items-center px-4 py-3 cursor-pointer hover:bg-gray-50">
+                                <div>
+                                    <p class="font-medium text-gray-800">{{ $package->name }}</p>
+                                    @if($package->price)
+                                    <p class="text-sm line-through text-gray-400">INR {{ number_format($package->price, 2) }}</p>
+                                    @endif
+                                </div>
+                                <div class="flex items-center space-x-3">
+                                    <p class="text-orange-500 font-semibold">
+                                        INR {{ number_format($package->discount_price ?? $package->price, 2) }}
+                                    </p>
+                                    <input type="radio" name="package" value="{{ $package->id }}" class="text-orange-500 focus:ring-orange-500">
+                                </div>
+                            </label>
+                            @endforeach
+                            @else
+                            <p class="text-gray-500 text-center py-4">No packages available for this service.</p>
+                            @endif
+
+
+                            <!-- Footer -->
+                            <div class="p-4">
+                                <button class="w-full bg-orange-500 text-white py-3 rounded-full font-semibold hover:bg-orange-600 transition">
+                                    Continue
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Sections -->
+        <div class="mt-10 space-y-8">
+            <!-- Overview -->
+            <div>
+                <h2 class="text-xl font-semibold text-orange-500 mb-3">Overview</h2>
+                <ul class="list-disc pl-6 text-gray-700 space-y-2">
+                    <li>{{$service->overview}}</li>
+
+                </ul>
             </div>
 
+            <!-- Architecture & Temple Complex -->
+            <div>
+                <h2 class="text-xl font-semibold text-orange-500 mb-3">Architecture & Temple Complex</h2>
+                <p class="text-gray-700">
+                    {{$service->architecture}}
+                </p>
+            </div>
+
+            <!-- Visiting Information -->
+            <div>
+                <h2 class="text-xl font-semibold text-orange-500 mb-3">Visiting Information</h2>
+                <ul class="list-disc pl-6 text-gray-700 space-y-2">
+                    <li><strong>Timing:</strong>{{$service->duration}}</li>
+                    <li><strong>Best Time to Visit:</strong> Navratri (Chaitra & Ashwin months)</li>
+                </ul>
+            </div>
+
+            <!-- Facilities & Amenities -->
+            <div>
+                <h2 class="text-xl font-semibold text-orange-500 mb-3">Facilities & Amenities</h2>
+                <ul class="list-disc pl-6 text-gray-700 space-y-2">{{$service->facilities}}
+                    <li>Parking: On-site for two-wheelers & four-wheeler</li>
+                    <li>Accessibility: Wheelchair accessible parking and entrance</li>
+                </ul>
+            </div>
         </div>
     </div>
+    <script>
+        const viewPackageBtn = document.getElementById('viewPackageBtn');
+        const packageModal = document.getElementById('packageModal');
+        const closeModal = document.getElementById('closeModal');
 
-    <!-- Sections -->
-    <div class="mt-10 space-y-8">
-        <!-- Overview -->
-        <div>
-            <h2 class="text-xl font-semibold text-orange-500 mb-3">Overview</h2>
-            <ul class="list-disc pl-6 text-gray-700 space-y-2">
-                <li>{{$service->overview}}</li>
-                
-            </ul>
-        </div>
+        // Open Modal
+        viewPackageBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            packageModal.classList.remove('hidden');
+            packageModal.classList.add('flex');
+        });
 
-        <!-- Architecture & Temple Complex -->
-        <div>
-            <h2 class="text-xl font-semibold text-orange-500 mb-3">Architecture & Temple Complex</h2>
-            <p class="text-gray-700">
-                {{$service->architecture}}
-            </p>
-        </div>
+        // Close Modal
+        closeModal.addEventListener('click', () => {
+            packageModal.classList.add('hidden');
+            packageModal.classList.remove('flex');
+        });
 
-        <!-- Visiting Information -->
-        <div>
-            <h2 class="text-xl font-semibold text-orange-500 mb-3">Visiting Information</h2>
-            <ul class="list-disc pl-6 text-gray-700 space-y-2">
-                <li><strong>Timing:</strong>{{$service->duration}}</li>
-                <li><strong>Best Time to Visit:</strong> Navratri (Chaitra & Ashwin months)</li>
-            </ul>
-        </div>
+        // Close on outside click
+        packageModal.addEventListener('click', (e) => {
+            if (e.target === packageModal) {
+                packageModal.classList.add('hidden');
+                packageModal.classList.remove('flex');
+            }
+        });
+    </script>
 
-        <!-- Facilities & Amenities -->
-        <div>
-            <h2 class="text-xl font-semibold text-orange-500 mb-3">Facilities & Amenities</h2>
-            <ul class="list-disc pl-6 text-gray-700 space-y-2">{{$service->facilities}}
-                <li>Parking: On-site for two-wheelers & four-wheeler</li>
-                <li>Accessibility: Wheelchair accessible parking and entrance</li>
-            </ul>
-        </div>
-    </div>
-</div>
-@endsection
+    @endsection
