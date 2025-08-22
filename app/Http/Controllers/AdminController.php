@@ -136,8 +136,8 @@ class AdminController extends Controller
                 $states = collect($data['data']['states'])->pluck('name');
             }
         }
-        $temples = Temple::orderBy('name')->get(['id', 'name']);
-        return view('admin.add-pandit', compact('states', 'temples'));
+
+        return view('admin.add-pandit', compact('states'));
     }
 
     public function storePandit(Request $request)
@@ -151,7 +151,7 @@ class AdminController extends Controller
             'location'       => 'nullable|string',
             'bio'            => 'nullable|string',
             'profile_image'  => 'nullable|image|mimes:jpg,png,jpeg|max:2048',
-            'temple_id'      => 'nullable|exists:temples,id',
+
         ]);
         $path = null;
         if ($request->hasFile('profile_image')) {
@@ -163,7 +163,7 @@ class AdminController extends Controller
             'name'           => $request->name,
             'email'          => $request->email,
             'phone'          => $request->phone,
-            'password'       => Hash::make($request->password),
+            'password'       => Hash::make('password'),
             'role'           => 'pandit',
             'specialization' => $request->specialization,
             'location'       => $request->location,
@@ -174,7 +174,7 @@ class AdminController extends Controller
         ]);
         Pandit::create([
             'user_id'   => $pandit->id,
-            'temple_id' => $request->temple_id, // if temple is selected
+
         ]);
 
         return redirect()->route('admin.pandits')->with('success', 'Pandit added successfully.');
@@ -316,6 +316,7 @@ class AdminController extends Controller
     }
 
     // Service Management
+
 
     // Blog Management
     public function blogs()

@@ -11,7 +11,6 @@ class Service extends Model
     protected $guarded = [];
 
     protected $casts = [
-        'packages' => 'array',
         'faqs' => 'array',
     ];
 
@@ -19,15 +18,16 @@ class Service extends Model
     {
         return $this->belongsTo(ServiceCategory::class);
     }
-
     public function packages()
     {
-        return $this->hasMany(ServicePackage::class);
+        return $this->hasMany(ServicePackage::class, 'service_id', 'id');
     }
+
+
 
     public function faqs()
     {
-        return $this->hasMany(ServiceFaq::class);
+        return $this->hasMany(ServiceFaq::class, 'service_id');
     }
 
     public function bookings()

@@ -65,16 +65,7 @@
                 <input type="email" name="email" placeholder="Enter the Email"
                     class="w-full border rounded-md px-4 py-2 focus:ring-2 focus:ring-orange-400 outline-none">
             </div>
-            <div>
-                <label for="temple_id" class="block text-sm font-medium text-gray-700">Select Temple</label>
-                <select name="temple_id"
-                    class="w-full border rounded-md px-4 py-2 focus:ring-2 focus:ring-orange-400 outline-none">
-                    <option>Select Temple</option>
-                    @foreach($temples as $temple)
-                    <option value="{{ $temple->id }}">{{ $temple->name }}</option>
-                    @endforeach
-                </select>
-            </div>
+        
 
             <div>
                 <input type="text" name="skills" placeholder="Enter the Skills"
