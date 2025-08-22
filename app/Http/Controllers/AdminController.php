@@ -1,21 +1,20 @@
 <?php
-
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Validator;
-use App\Models\Admin;
-use App\Models\User;
-use App\Models\Pandit;
-use App\Models\Booking;
-use App\Models\Order;
-use App\Models\Product;
-use App\Models\Temple;
-use App\Models\Service;
 use App\Models\Blog;
+use App\Models\Booking;
+use App\Models\Contact;
+use App\Models\Location;
+use App\Models\Order;
+use App\Models\Pandit;
+use App\Models\Product;
+use App\Models\Service;
+use App\Models\Temple;
+use App\Models\User;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Validator;
 
 class AdminController extends Controller
 {
@@ -61,10 +60,10 @@ class AdminController extends Controller
     public function dashboard()
     {
         $stats = [
-            'total_users' => User::count(),
+            'total_users'      => User::count(),
             // 'total_pandits' => Pandit::count(),
-            'total_bookings' => Booking::count(),
-            'total_orders' => Order::count(),
+            'total_bookings'   => Booking::count(),
+            'total_orders'     => Order::count(),
             'pending_bookings' => Booking::where('status', 'pending')->count(),
             // 'active_pandits' => Pandit::where('is_active', true)->count(),
         ];
@@ -91,8 +90,8 @@ class AdminController extends Controller
 
     public function toggleUserStatus($id)
     {
-        $user = User::findOrFail($id);
-        $user->is_active = !$user->is_active;
+        $user            = User::findOrFail($id);
+        $user->is_active = ! $user->is_active;
         $user->save();
 
         return back()->with('success', 'User status updated successfully.');
@@ -109,7 +108,7 @@ class AdminController extends Controller
 
     public function updateBookingStatus(Request $request, $id)
     {
-        $booking = Booking::findOrFail($id);
+        $booking         = Booking::findOrFail($id);
         $booking->status = $request->status;
         $booking->save();
 
@@ -127,7 +126,7 @@ class AdminController extends Controller
     {
 
         $response = Http::post('https://countriesnow.space/api/v0.1/countries/states', [
-            'country' => 'India'
+            'country' => 'India',
         ]);
 
         $states = [];
@@ -159,7 +158,6 @@ class AdminController extends Controller
             $path = $request->file('profile_image')->store('pandits', 'public');
         }
 
-
         // Create pandit inside users table
         $pandit = User::create([
             'name'           => $request->name,
@@ -182,11 +180,10 @@ class AdminController extends Controller
         return redirect()->route('admin.pandits')->with('success', 'Pandit added successfully.');
     }
 
-
     public function togglePanditStatus($id)
     {
-        $pandit = User::findOrFail($id);
-        $pandit->is_active = !$pandit->is_active;
+        $pandit            = User::findOrFail($id);
+        $pandit->is_active = ! $pandit->is_active;
         $pandit->save();
 
         return back()->with('success', 'Pandit status updated successfully.');
@@ -207,12 +204,12 @@ class AdminController extends Controller
     public function storeProduct(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'name' => 'required|string|max:255',
-            'description' => 'required|string',
-            'price' => 'required|numeric|min:0',
-            'category' => 'required|string|max:255',
+            'name'           => 'required|string|max:255',
+            'description'    => 'required|string',
+            'price'          => 'required|numeric|min:0',
+            'category'       => 'required|string|max:255',
             'stock_quantity' => 'required|integer|min:0',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'image'          => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
         if ($validator->fails()) {
@@ -242,7 +239,7 @@ class AdminController extends Controller
 
     public function updateOrderStatus(Request $request, $id)
     {
-        $order = Order::findOrFail($id);
+        $order         = Order::findOrFail($id);
         $order->status = $request->status;
         $order->save();
 
@@ -265,36 +262,34 @@ class AdminController extends Controller
     {
         $validator = Validator::make($request->all(), [
 
-            'name'              => 'required|string|max:255',
-            'short_description' => 'nullable|string',
+            'name'                => 'required|string|max:255',
+            'short_description'   => 'nullable|string',
             'overall_description' => 'nullable|string',
-            'location'          => 'nullable|string',
-            'visiting_info'     => 'nullable|string',
-            'facilities'        => 'nullable|string',
-            'images.*'          => 'nullable|image|mimes:jpg,png,jpeg|max:2048',
-            'packages'          => 'array',
-            'packages.*.name'   => 'required_with:packages|string',
-            'packages.*.price'  => 'required_with:packages|numeric',
+            'location'            => 'nullable|string',
+            'visiting_info'       => 'nullable|string',
+            'facilities'          => 'nullable|string',
+            'images.*'            => 'nullable|image|mimes:jpg,png,jpeg|max:2048',
+            'packages'            => 'array',
+            'packages.*.name'     => 'required_with:packages|string',
+            'packages.*.price'    => 'required_with:packages|numeric',
         ]);
-
-
 
         $images = [];
         if ($request->hasFile('images')) {
             foreach ($request->file('images') as $file) {
-                $path = $file->store('temples', 'public');
+                $path     = $file->store('temples', 'public');
                 $images[] = $path;
             }
         }
 
         $temple = Temple::create([
-            'name' => $request->name,
-            'short_description' => $request->short_description,
+            'name'                => $request->name,
+            'short_description'   => $request->short_description,
             'overall_description' => $request->overall_description,
-            'location' => $request->location,
-            'visiting_info' => $request->visiting_info,
-            'facilities' => $request->facilities,
-            'images' => $images,
+            'location'            => $request->location,
+            'visiting_info'       => $request->visiting_info,
+            'facilities'          => $request->facilities,
+            'images'              => $images,
         ]);
 
         if ($request->has('packages') && is_array($request->packages)) {
@@ -313,8 +308,8 @@ class AdminController extends Controller
 
     public function toggleTempleStatus($id)
     {
-        $temple = Temple::findOrFail($id);
-        $temple->is_active = !$temple->is_active;
+        $temple            = Temple::findOrFail($id);
+        $temple->is_active = ! $temple->is_active;
         $temple->save();
 
         return back()->with('success', 'Temple status updated successfully.');
@@ -323,15 +318,19 @@ class AdminController extends Controller
     // Service Management
 
 
-
-
-
-
     // Blog Management
     public function blogs()
     {
-        $blogs = Blog::latest()->paginate(20);
-        return view('admin.blogs', compact('blogs'));
+        $blogs     = Blog::latest()->paginate(20);
+        $locations = Location::where('is_active', true)->get();
+
+        return view('admin.blogs', compact('blogs', 'locations'));
+    }
+
+    public function contacts()
+    {
+        $contacts     = Contact::latest()->paginate(20);
+        return view('admin.contacts', compact('contacts'));
     }
 
     public function createBlog()
@@ -342,13 +341,13 @@ class AdminController extends Controller
     public function storeBlog(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'title' => 'required|string|max:255',
-            'content' => 'required|string',
-            'excerpt' => 'nullable|string|max:500',
-            'author' => 'nullable|string|max:100',
+            'title'    => 'required|string|max:255',
+            'content'  => 'required|string',
+            'excerpt'  => 'nullable|string|max:500',
+            'author'   => 'nullable|string|max:100',
             'category' => 'nullable|string|max:100',
-            'tags' => 'nullable|string',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'tags'     => 'nullable|string',
+            'image'    => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
         if ($validator->fails()) {
@@ -378,9 +377,9 @@ class AdminController extends Controller
 
     public function toggleBlogStatus($id)
     {
-        $blog = Blog::findOrFail($id);
-        $blog->is_published = !$blog->is_published;
-        if ($blog->is_published && !$blog->published_at) {
+        $blog               = Blog::findOrFail($id);
+        $blog->is_published = ! $blog->is_published;
+        if ($blog->is_published && ! $blog->published_at) {
             $blog->published_at = now();
         }
         $blog->save();
@@ -399,12 +398,12 @@ class AdminController extends Controller
         $product = Product::findOrFail($id);
 
         $validator = Validator::make($request->all(), [
-            'name' => 'required|string|max:255',
-            'description' => 'required|string',
-            'price' => 'required|numeric|min:0',
-            'category' => 'required|string|max:255',
+            'name'           => 'required|string|max:255',
+            'description'    => 'required|string',
+            'price'          => 'required|numeric|min:0',
+            'category'       => 'required|string|max:255',
             'stock_quantity' => 'required|integer|min:0',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'image'          => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
         if ($validator->fails()) {
@@ -455,19 +454,19 @@ class AdminController extends Controller
         $temple = Temple::findOrFail($id);
 
         $validator = Validator::make($request->all(), [
-            'name' => 'required|string|max:255',
+            'name'        => 'required|string|max:255',
             'description' => 'nullable|string',
-            'location' => 'required|string|max:255',
-            'address' => 'required|string',
-            'phone' => 'nullable|string|max:20',
-            'email' => 'nullable|email|max:255',
-            'website' => 'nullable|url|max:255',
-            'deity' => 'nullable|string|max:255',
-            'timings' => 'nullable|string|max:255',
-            'entry_fee' => 'nullable|numeric|min:0',
-            'latitude' => 'nullable|numeric|between:-90,90',
-            'longitude' => 'nullable|numeric|between:-180,180',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'location'    => 'required|string|max:255',
+            'address'     => 'required|string',
+            'phone'       => 'nullable|string|max:20',
+            'email'       => 'nullable|email|max:255',
+            'website'     => 'nullable|url|max:255',
+            'deity'       => 'nullable|string|max:255',
+            'timings'     => 'nullable|string|max:255',
+            'entry_fee'   => 'nullable|numeric|min:0',
+            'latitude'    => 'nullable|numeric|between:-90,90',
+            'longitude'   => 'nullable|numeric|between:-180,180',
+            'image'       => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
         if ($validator->fails()) {
@@ -518,20 +517,20 @@ class AdminController extends Controller
         $service = Service::findOrFail($id);
 
         $validator = Validator::make($request->all(), [
-            'title' => 'required|string|max:255',
+            'title'             => 'required|string|max:255',
             'short_description' => 'nullable|string|max:500',
-            'introduction' => 'nullable|string',
-            'importance' => 'nullable|string',
-            'traditions' => 'nullable|string',
-            'service_type' => 'nullable|string|max:100',
-            'location' => 'nullable|string|max:255',
-            'images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:5120',
-            'packages' => 'nullable|array',
-            'packages.*.name' => 'nullable|string|max:255',
-            'packages.*.price' => 'nullable|numeric|min:0',
-            'faqs' => 'nullable|array',
-            'faqs.*.question' => 'nullable|string|max:500',
-            'faqs.*.answer' => 'nullable|string',
+            'introduction'      => 'nullable|string',
+            'importance'        => 'nullable|string',
+            'traditions'        => 'nullable|string',
+            'service_type'      => 'nullable|string|max:100',
+            'location'          => 'nullable|string|max:255',
+            'images.*'          => 'nullable|image|mimes:jpeg,png,jpg,gif|max:5120',
+            'packages'          => 'nullable|array',
+            'packages.*.name'   => 'nullable|string|max:255',
+            'packages.*.price'  => 'nullable|numeric|min:0',
+            'faqs'              => 'nullable|array',
+            'faqs.*.question'   => 'nullable|string|max:500',
+            'faqs.*.answer'     => 'nullable|string',
         ]);
 
         if ($validator->fails()) {
@@ -563,14 +562,14 @@ class AdminController extends Controller
         // Filter out empty packages
         if ($request->packages) {
             $data['packages'] = array_filter($request->packages, function ($package) {
-                return !empty($package['name']) || !empty($package['price']);
+                return ! empty($package['name']) || ! empty($package['price']);
             });
         }
 
         // Filter out empty FAQs
         if ($request->faqs) {
             $data['faqs'] = array_filter($request->faqs, function ($faq) {
-                return !empty($faq['question']) || !empty($faq['answer']);
+                return ! empty($faq['question']) || ! empty($faq['answer']);
             });
         }
 

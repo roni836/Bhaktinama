@@ -32,5 +32,9 @@ class DatabaseSeeder extends Seeder
             // Add other seeders here
         ]);
 
+        $this->call([
+        LocationSeeder::class,
+    ]);
+
     }
 }

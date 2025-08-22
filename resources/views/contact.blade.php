@@ -118,7 +118,7 @@
             <div class="lg:w-1/2 bg-orange-50 rounded-lg p-8 shadow-lg">
                 <h2 class="text-3xl font-bold mb-6 text-gradient">Get in Touch</h2>
                 <p class="text-gray-700 mb-8">We'd love to hear from you! Whether you have a question, need assistance with a puja, or want personalized spiritual guidance – we're just a message away.</p>
-                <form class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <form class="grid grid-cols-1 md:grid-cols-2 gap-6" method="POST" action="{{ route('contact.submit') }}"> @csrf
                     <div>
                         <label for="firstName" class="block text-gray-700 text-sm font-semibold mb-2">First Name</label>
                         <input type="text" id="firstName" name="firstName" placeholder="Suraj" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-orange-500">
