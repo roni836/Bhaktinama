@@ -42,7 +42,8 @@ Route::middleware(['auth', 'role:pandit'])->prefix('pandit')->name('pandit.')->g
     Route::post('/change-password', [PanditController::class, 'changePassword'])->name('changePassword');
 
 
-    Route::get('/bookings', [PanditController::class, 'bookings'])->name('bookings');
+    Route::get('/current-bookings', [PanditController::class, 'currentBookings'])->name('current.bookings');
+    Route::get('/previous-bookings', [PanditController::class, 'previousBookings'])->name('previous.bookings');
     Route::get('/profile', [PanditController::class, 'profile'])->name('profile');
     Route::put('/profile', [PanditController::class, 'updateProfile'])->name('profile.update');
     Route::post('/logout', [PanditController::class, 'logout'])->name('logout');

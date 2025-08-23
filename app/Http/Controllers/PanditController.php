@@ -24,14 +24,24 @@ class PanditController extends Controller
     }
 
     // Show pandit bookings
-    public function bookings()
+    public function currentBookings()
     {
         $pandit = Auth::user();
-        $bookings = Booking::where('pandit_id', $pandit->id)
+        $bookings = Booking::where('id', $pandit->id)
             ->orderBy('ceremony_date', 'desc')
             ->paginate(10);
 
-        return view('pandit.bookings', compact('bookings'));
+        return view('pandit.current-bookings', compact('bookings'));
+    }
+
+    public function previousBookings()
+    {
+        $pandit = Auth::user();
+        $bookings = Booking::where('id', $pandit->id)
+            ->orderBy('ceremony_date', 'desc')
+            ->paginate(10);
+
+        return view('pandit.previous-bookings', compact('bookings'));
     }
 
     // Show pandit profile
