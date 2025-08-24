@@ -15,14 +15,10 @@ return new class extends Migration
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->foreignId('product_id')->nullable()->constrained()->nullOnDelete();
-            $table->integer('quantity')->default(1);
-            $table->decimal('price', 10, 2);
-            $table->string('status')->default('pending'); // pending, processing, shipped, delivered, cancelled
             $table->string('payment_status')->default('pending'); // pending, paid, failed, refunded
             $table->string('payment_method')->nullable();
             $table->text('shipping_address')->nullable();
-            $table->text('order_notes')->nullable();
+            $table->decimal('total_amount', 10, 2);
             $table->timestamps();
         });
     }

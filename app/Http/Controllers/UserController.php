@@ -1,10 +1,12 @@
 <?php
+
 namespace App\Http\Controllers;
 
 use App\Models\blog;
 use App\Models\Booking;
 use App\Models\Contact;
 use App\Models\Order;
+use App\Models\OrderItem;
 use App\Models\Product;
 use App\Models\ProductCategory;
 use App\Models\Service;
@@ -36,6 +38,201 @@ class UserController extends Controller
         $data['shop'] = Product::all();
         return view("shop", $data);
     }
+
+    public function cartIndex()
+    {
+        // Sample data, you can replace this with database or session data
+        $cartItems = [
+            [
+                'id' => 1,
+                'name' => 'Sandalwood Incense Sticks',
+                'description' => 'Premium Quality Pack of 20 sticks',
+                'price' => 999,
+                'quantity' => 1,
+                'image' => 'https://placehold.co/80x80',
+            ],
+            [
+                'id' => 2,
+                'name' => 'Brass Diya Lamp',
+                'description' => 'Hand Crafted Size: 4 inches',
+                'price' => 499,
+                'quantity' => 1,
+                'image' => 'https://placehold.co/80x80',
+            ],
+            [
+                'id' => 3,
+                'name' => 'Temple Prasad Box',
+                'description' => 'Fresh Daily Weight: 500g',
+                'price' => 999,
+                'quantity' => 1,
+                'image' => 'https://placehold.co/80x80',
+            ],
+        ];
+
+        $subtotal = collect($cartItems)->sum(function ($item) {
+            return $item['price'] * $item['quantity'];
+        });
+
+        $shippingFee = 50;
+        $gst = round($subtotal * 0.18);
+        $total = $subtotal + $shippingFee + $gst;
+
+        return view('my-cart', compact('cartItems', 'subtotal', 'shippingFee', 'gst', 'total'));
+    }
+
+    public function addToCart(Request $request)
+    {
+        $cart = session()->get('cart', []);
+
+        $id = $request->id;
+        $quantity = (int) $request->quantity;
+
+        if (isset($cart[$id])) {
+            $cart[$id]['quantity'] += $quantity;
+        } else {
+            $cart[$id] = [
+                'name' => $request->name,
+                'price' => $request->price,
+                'quantity' => $quantity,
+                'image' => $request->image
+            ];
+        }
+
+        session()->put('cart', $cart);
+
+        return response()->json([
+            'message' => $request->name . ' added to cart!',
+            'cartCount' => count($cart)
+        ]);
+    }
+
+    // Update quantity of a cart item
+    public function updateQuantity(Request $request)
+    {
+        $request->validate([
+            'id' => 'required|integer',
+            'quantity' => 'required|integer|min:1'
+        ]);
+
+        // Here you should update quantity in session or database
+        return back()->with('success', 'Quantity updated!');
+    }
+
+    // Remove item from cart
+    public function removeItem(Request $request)
+    {
+        $request->validate(['id' => 'required|integer']);
+
+        // Remove from session or database
+        return back()->with('success', 'Item removed!');
+    }
+
+    // Apply coupon
+    public function applyCoupon(Request $request)
+    {
+        $request->validate(['coupon' => 'required|string']);
+
+        // Check coupon logic here
+        $discount = 50; // example flat discount
+        return back()->with('success', "Coupon applied! Discount: INR $discount");
+    }
+    public function checkout(Request $request)
+    {
+        // Demo address (replace with user data from DB in real app)
+        $address = [
+            'name'  => 'Aditya Sharma',
+            'email' => 'aditya.sharma@email.com',
+            'phone' => '+91 98765 43210',
+            'line1' => '42 Rajmahal Avenue, Apartment 301, Silver Heightsv',
+            'city'  => 'Mumbai',
+            'pin'   => '400001',
+        ];
+
+        // Get item IDs from request parameters
+        $itemIds = $request->input('items', []); // e.g., items[]=1&items[]=2
+        $cartItems = Product::whereIn('id', $itemIds)->get();
+
+        // Calculate totals
+        $subtotal = $cartItems->sum(fn($i) => $i->price); // assuming qty = 1, or you can add qty param
+        $shipping = 50;
+        $gst      = round(0.18 * ($subtotal + $shipping)); // 18% GST
+        $total    = $subtotal + $shipping + $gst;
+
+        return view('checkout', [
+            'address'  => $address,
+            'cart'     => $cartItems,
+            'subtotal' => $subtotal,
+            'shipping' => $shipping,
+            'gst'      => $gst,
+            'total'    => $total,
+        ]);
+    }
+
+
+    public function processCheckout(Request $request)
+    {
+        // Validate and process the checkout
+        $request->validate([
+            'name'  => 'required|string|max:255',
+            'email' => 'required|email|max:255',
+            'phone' => 'required|string|max:15',
+            'address' => 'required|string|max:255',
+            'city'  => 'required|string|max:100',
+            'pin'   => 'required|string|max:10',
+        ]);
+
+        // Here you would typically create an order in the database
+
+        return redirect()->route('homepage')->with('success', 'Order placed successfully!');
+    }
+    public function place(Request $request)
+    {
+        $cart = json_decode($request->input('cart'), true);
+        $address = json_decode($request->input('address'), true);
+
+        // Now $cart is an array and passes validation
+        $request->merge(['cart' => $cart, 'address' => $address]);
+
+        $request->validate([
+            'cart' => 'required|array|min:1',
+            'payment_method' => 'required|string',
+            'total_amount' => 'required|numeric',
+            'address' => 'required|array',
+        ]);
+
+        $shippingAddress = is_array($request->address) ? json_encode($request->address) : $request->address;
+        // Create the main order
+        $order = Order::create([
+            'user_id' => auth()->id(),
+            'payment_method' => $request->payment_method,
+            'payment_status' => $request->payment_method == 'cod' ? 'pending' : 'payment_pending',
+            'shipping_address' => $shippingAddress,
+            'total_amount' => $request->total_amount,
+        ]);
+
+        // Create order items
+        foreach ($request->cart as $item) {
+            OrderItem::create([
+                'order_id' => $order->id,
+                'product_id' => $item['id'],
+                'quantity' => $item['quantity'],
+                'price' => $item['price'],
+            ]);
+        }
+
+        // Redirect to order confirmation page
+        return redirect()->route('order.confirmation', $order->id)
+            ->with('success', 'Order placed successfully!');
+    }
+
+    public function orderConfirmation($id)
+    {
+        $order = Order::with('items.product')->findOrFail($id);
+        return view('order', compact('order'));
+    }
+
+
+
     public function about()
     {
         return view("about");
@@ -316,6 +513,5 @@ class UserController extends Controller
         } else {
             return back()->withErrors(['error' => 'Failed to submit your contact request. Please try again later.'])->withInput();
         }
-
     }
 }

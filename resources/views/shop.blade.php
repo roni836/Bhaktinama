@@ -41,10 +41,10 @@
         <div class="container mx-auto px-4 text-center">
             <div class="flex justify-between items-center mb-12 w-full px-4">
                 <h2 class="text-3xl font-bold text-gradient">Shop by Category</h2>
-                <button class="bg-orange-500 hover:bg-orange-600 text-white font-semibold py-2 px-6 rounded-full transition duration-300 flex items-center space-x-2">
+                <a href="{{ route('my-cart') }}" class="bg-orange-500 hover:bg-orange-600 text-white font-semibold py-2 px-6 rounded-full transition duration-300 flex items-center space-x-2">
                     <i class="fas fa-shopping-cart"></i>
-                    <span>My Cart</span>
-                </button>
+                    <span>My Cart (<span id="cartCount">0</span>)</span>
+                </a>
             </div>
 
             <p class="text-gray-600 mb-12">Browse our carefully curated collection of authentic puja essentials, each crafted with devotion and attention to detail</p>
@@ -70,7 +70,7 @@
                 <div class="bg-white rounded-lg shadow-md overflow-hidden transform transition duration-300 hover:scale-105">
                     <img src="{{ asset('uploads/' . $item->image) }}" alt="Brass Puja Thali Set" class="w-full h-48 object-cover rounded-t-lg">
                     <div class="p-4 text-left">
-                        <h3 class="text-lg font-semibold mb-1">{{$item->Name}}</h3>
+                        <h3 class="text-lg font-semibold mb-1">{{$item->name}}</h3>
                         <p class="text-gray-600 text-sm mb-2">{{$item->description}}</p>
                         <div class="flex justify-between items-center mb-2">
                             <div class="flex text-yellow-500 text-sm mr-2">
@@ -81,11 +81,11 @@
                         <p class="text-lg font-semibold text-orange-600 mb-2">INR {{$item->price}}</p>
                         <button class="add-to-cart w-full bg-orange-500 hover:bg-orange-600 text-white font-semibold py-2 rounded-full shadow-md transition duration-300"
                             data-id="{{ $item->id }}"
-                            data-name="{{ $item->Name }}"
+                            data-name="{{ $item->name }}"
                             data-price="{{ $item->price }}"
                             data-image="{{ asset('uploads/' . $item->image) }}"
                             data-description="{{ $item->description }}">
-                            Add to Cart
+                            <i class="fas fa-shopping-cart"></i>
                         </button>
                     </div>
 
@@ -119,13 +119,13 @@
         <img id="modalImage" class="w-full h-56 object-contain rounded mb-4" src="" alt="Product Image">
 
         <!-- Product Title -->
-        <h2 id="modalName" class="text-2xl font-bold mb-2">Brass Puja Thali Set</h2>
+        <h2 id="modalName" class="text-2xl font-bold mb-2"></h2>
 
         <!-- Price -->
         <p class="text-lg text-orange-500 font-semibold mb-4">₹ <span id="modalPrice">320</span></p>
 
         <!-- Description -->
-        <p class="text-gray-600 text-sm mb-4">
+        <p id="modalDescription" class="text-gray-600 text-sm mb-4">
             Complete brass puja thali set featuring intricate traditional designs...
         </p>
 
@@ -136,12 +136,11 @@
         </div>
 
         <!-- Add to Cart Button -->
-        <button class="w-full bg-orange-500 hover:bg-orange-600 text-white py-3 rounded-lg text-lg font-semibold">
+        <button  id="modalAddToCart" class="w-full bg-orange-500 hover:bg-orange-600 text-white py-3 rounded-lg text-lg font-semibold">
             🛒 Add to Cart
         </button>
     </div>
 </div>
-
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         const modal = document.getElementById('productModal');
@@ -149,24 +148,62 @@
         const modalImage = document.getElementById('modalImage');
         const modalName = document.getElementById('modalName');
         const modalPrice = document.getElementById('modalPrice');
+        const modalDescription = document.getElementById('modalDescription');
+        const quantityInput = document.getElementById('quantity');
+        const addToCartBtn = document.getElementById('modalAddToCart');
 
+        let currentProduct = {}; // Store clicked product info
+
+        // Open modal
         document.querySelectorAll('.add-to-cart').forEach(button => {
             button.addEventListener('click', function() {
-                const id = this.dataset.id; // Get the clicked item ID
-                console.log("Clicked product ID:", id);
+                currentProduct = {
+                    id: this.dataset.id,
+                    name: this.dataset.name,
+                    price: parseFloat(this.dataset.price),
+                    image: this.dataset.image,
+                    description: this.dataset.description
+                };
 
-                // Set modal data from dataset
-                modalImage.src = this.dataset.image;
-                modalName.textContent = this.dataset.name;
-                modalPrice.textContent = this.dataset.price;
+                modalImage.src = currentProduct.image;
+                modalName.textContent = currentProduct.name;
+                modalPrice.textContent = currentProduct.price;
+                quantityInput.value = 1;
 
                 modal.classList.remove('hidden');
             });
         });
 
+        // Close modal
         closeModal.addEventListener('click', () => modal.classList.add('hidden'));
         modal.addEventListener('click', (e) => {
             if (e.target === modal) modal.classList.add('hidden');
+        });
+
+        // Add to cart using localStorage
+        addToCartBtn.addEventListener('click', function() {
+            const quantity = parseInt(quantityInput.value);
+            let cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+            // Check if product already exists
+            let existing = cart.find(item => item.id === currentProduct.id);
+            if (existing) {
+                existing.quantity += quantity;
+            } else {
+                cart.push({
+                    ...currentProduct,
+                    quantity
+                });
+            }
+
+            localStorage.setItem('cart', JSON.stringify(cart));
+            alert(currentProduct.name + " added to cart!");
+            modal.classList.add('hidden');
+
+            // Optional: update cart count in header
+            const cartCount = cart.reduce((sum, item) => sum + item.quantity, 0);
+            const countEl = document.getElementById('cartCount');
+            if (countEl) countEl.textContent = cartCount;
         });
     });
 </script>
