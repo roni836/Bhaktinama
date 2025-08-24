@@ -28,7 +28,7 @@
                     <i class="fas fa-tachometer-alt mr-3"></i>
                     Dashboard
                 </a>
-                <a href="{{ route('pandit.bookings') }}" class="flex items-center py-3 px-4 text-gray-300 hover:bg-gray-800 hover:text-white {{ request()->routeIs('pandit.bookings') ? 'bg-gray-800 text-white' : '' }}">
+                <a href="{{ route('pandit.current.bookings') }}" class="flex items-center py-3 px-4 text-gray-300 hover:bg-gray-800 hover:text-white {{ request()->routeIs('pandit.current.bookings') ? '.g-gray-800 text-white' : '' }}">
                     <i class="fas fa-calendar-alt mr-3"></i>
                     Bookings
                 </a>
