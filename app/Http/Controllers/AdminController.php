@@ -169,7 +169,7 @@ class AdminController extends Controller
             'phone'          => $request->phone,
             'password'       => Hash::make('password'),
             'role'           => 'pandit',
-            'specialization' => $request->specialization,
+            'specializations' => $request->specializations ? json_encode($request->specializations) : null, // ✅ Convert to JSON
             'location'       => $request->location,
             'bio'            => $request->bio,
             'is_verified'    => true,

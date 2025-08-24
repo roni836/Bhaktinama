@@ -36,17 +36,24 @@
     <div class="max-w-4xl mx-auto  rounded-lg p-6">
 
         <!-- STEP 1: DETAILS -->
-        <div x-show="step === 1">
-            <form id="detailsForm">
-                @if ($errors->any())
-                <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4">
-                    <ul class="list-disc pl-5">
-                        @foreach ($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                        @endforeach
-                    </ul>
-                </div>
-                @endif
+        <!-- Form starts here -->
+        <form method="POST" action="{{ route('service-booking.submit') }}" class="max-w-4xl mx-auto rounded-lg p-6">
+            @csrf
+
+            <!-- ✅ Hidden fields for Alpine data -->
+             <input type="hidden" name="service_id" value="{{ $service->id }}">
+            <input type="hidden" name="pandit_id" :value="selectedPandit">
+            <input type="hidden" name="payment_method" :value="payment">
+
+            <!-- ✅ Show validation errors -->
+            @if($errors->any())
+            <div class="bg-red-500 text-white p-2 mb-4">
+                @foreach($errors->all() as $error)
+                <p>{{ $error }}</p>
+                @endforeach
+            </div>
+            @endif
+            <div x-show="step === 1">
 
                 <div class="bg-white p-6 rounded-lg shadow font-sans">
                     <!-- Personal Details -->
@@ -63,7 +70,7 @@
                                             d="M5.121 17.804A7 7 0 0112 15a7 7 0 016.879 2.804M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                                     </svg>
                                 </span>
-                                <input type="text" name="full_name" placeholder="Enter your full name"
+                                <input type="text" name="name" placeholder="Enter your full name"
                                     class="w-full p-2 outline-none">
                             </div>
                         </div>
@@ -105,7 +112,7 @@
                     <h2 class="text-lg font-semibold mb-4">Address Details</h2>
                     <div class="mb-4">
                         <label class="block text-sm mb-1">Street Address *</label>
-                        <input type="text" name="street" placeholder="Enter your street address"
+                        <input type="text" name="street_address" placeholder="Enter your street address"
                             class="w-full border rounded p-2">
                     </div>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
@@ -172,105 +179,112 @@
                     </div>
                 </div>
 
-            </form>
-        </div>
+            </div>
 
-        <!-- STEP 2: SELECT PANDIT -->
-        <div x-show="step === 2">
-            <div class="max-w-7xl mx-auto px-4 py-10">
-                <h2 class="text-2xl font-bold text-center text-orange-600 mb-2">
-                    Pandits List By Patna Location
-                </h2>
-                <div class="flex flex-col justify-center items-start">
+            <!-- STEP 2: SELECT PANDIT -->
+            <div x-show="step === 2">
+                <div class="max-w-7xl mx-auto px-4 py-10">
                     <h2 class="text-2xl font-bold text-center text-orange-600 mb-2">
-                        Our Experienced Pandits
+                        Pandits List By Patna Location
                     </h2>
-                    <p class="text-center text-gray-600 mb-8">
-                        Choose from our carefully selected pandits, each specializing in various religious ceremonies and rituals
-                    </p>
+                    <div class="flex flex-col justify-center items-start">
+                        <h2 class="text-2xl font-bold text-center text-orange-600 mb-2">
+                            Our Experienced Pandits
+                        </h2>
+                        <p class="text-center text-gray-600 mb-8">
+                            Choose from our carefully selected pandits, each specializing in various religious ceremonies and rituals
+                        </p>
 
 
-                </div>
+                    </div>
 
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                    @foreach($pandits as $p)
-                    <div class="bg-white shadow rounded-lg p-4 flex flex-col items-center text-center hover:shadow-lg transition">
-                        <div class="mb-4 flex">
-                            <img src="{{ $p->user->avatar_url ?? 'https://placehold.co/100x100' }}"
-                                class="w-18 h-18 rounded-full object-cover mb-4 border-4 border-orange-200"
-                                alt="Pandit Image">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                        @foreach($pandits as $p)
+                        <div class="bg-white shadow rounded-lg p-4 flex flex-col items-center text-center hover:shadow-lg transition">
+                            <div class="mb-4 flex">
+                                <img src="{{ $p->user->avatar_url ?? 'https://placehold.co/100x100' }}"
+                                    class="w-18 h-18 rounded-full object-cover mb-4 border-4 border-orange-200"
+                                    alt="Pandit Image">
 
-                            <div class="ml-4 flex flex-col mb-2 text-start">
-                                <h3 class="font-semibold text-lg">{{ $p->user->name }}</h3>
-                                <p class="text-gray-500 text-sm mb-4">{{ $p->user->bio ?? 'Expert in Vedic rituals' }}</p>
+                                <div class="ml-4 flex flex-col mb-2 text-start">
+                                    <h3 class="font-semibold text-lg">{{ $p->user->name }}</h3>
+                                    <p class="text-gray-500 text-sm mb-4">{{ $p->user->bio ?? 'Expert in Vedic rituals' }}</p>
+
+                                </div>
 
                             </div>
+                            <ul class="text-gray-700 text-sm space-y-2 mb-6 text-left">
+                                @foreach($p->user->specializations ?? [] as $specialization)
+                                <li class="flex items-center">
+                                    <svg class="w-4 h-4 text-blue-500 mr-2" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                                    </svg>
+                                    {{ $specialization }}
+                                </li>
+                                @endforeach
+                            </ul>
 
+
+                            <button type="button"
+                                @click="selectedPandit = {{ $p->id }}; step = 3"
+                                class="bg-orange-500 text-white px-6 py-2 rounded-full font-semibold hover:bg-orange-600 transition">
+                                Select Pandit
+                            </button>
                         </div>
-                        <ul class="text-gray-700 text-sm space-y-2 mb-6 text-left">
-                            @foreach(explode(',', $p->user->specialization ?? '') as $specialization)
-                            <li class="flex items-center">
-                                <svg class="w-4 h-4 text-blue-500 mr-2" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
-                                </svg>
-                                {{ $specialization }}
-                            </li>
-                            @endforeach
-                        </ul>
-
-                        <button type="button"
-                            @click="selectedPandit = {{ $p->id }}; step = 3"
-                            class="bg-orange-500 text-white px-6 py-2 rounded-full font-semibold hover:bg-orange-600 transition">
-                            Select Pandit
-                        </button>
+                        @endforeach
                     </div>
-                    @endforeach
+                </div>
+
+                <div class="flex justify-start mt-6">
+                    <button type="button" class="bg-gray-300 text-gray-700 px-5 py-2 rounded mr-3"
+                        @click="step = 1">Back</button>
+                </div>
+            </div>
+            <div x-show="step === 3">
+                <h2 class="text-xl font-bold mb-4">Choose Payment Method</h2>
+                <div class="space-y-4">
+                    <label class="flex items-center space-x-3 border p-4 rounded cursor-pointer hover:border-orange-500"
+                        :class="payment === 'online' ? 'border-orange-500' : ''">
+                        <input type="radio" name="payment_method" value="online" x-model="payment" class="hidden">
+                        <span class="w-5 h-5 border rounded-full flex items-center justify-center">
+                            <span x-show="payment === 'online'" class="w-3 h-3 bg-orange-500 rounded-full"></span>
+                        </span>
+                        <span class="text-gray-700">Online Payment</span>
+                    </label>
+
+                    <label class="flex items-center space-x-3 border p-4 rounded cursor-pointer hover:border-orange-500"
+                        :class="payment === 'cash' ? 'border-orange-500' : ''">
+                        <input type="radio" name="payment_method" value="cash" x-model="payment" class="hidden">
+                        <span class="w-5 h-5 border rounded-full flex items-center justify-center">
+                            <span x-show="payment === 'cash'" class="w-3 h-3 bg-orange-500 rounded-full"></span>
+                        </span>
+                        <span class="text-gray-700">Cash on Delivery</span>
+                    </label>
+                </div>
+
+                <div class="flex justify-between mt-6">
+                    <button type="button" class="bg-gray-300 text-gray-700 px-5 py-2 rounded"
+                        @click="step = 2">Back</button>
+                    <button type="button" class="bg-orange-500 text-white px-5 py-2 rounded"
+                        @click="if(payment){ step = 4 } else { alert('Please select a payment method'); }">Continue</button>
                 </div>
             </div>
 
-            <div class="flex justify-start mt-6">
-                <button type="button" class="bg-gray-300 text-gray-700 px-5 py-2 rounded mr-3"
-                    @click="step = 1">Back</button>
-            </div>
-        </div>
 
-        <!-- STEP 3: PAYMENT -->
-        <div x-show="step === 3">
-            <h2 class="text-xl font-bold mb-4">Choose Payment Method</h2>
-            <div class="space-y-4">
-                <label class="flex items-center space-x-3 border p-4 rounded cursor-pointer hover:border-orange-500">
-                    <input type="radio" name="payment" value="online" class="hidden" checked>
-                    <span class="w-5 h-5 border rounded-full flex items-center justify-center">
-                        <span class="w-3 h-3 bg-orange-500 rounded-full"></span>
-                    </span>
-                    <span class="text-gray-700">Online Payment</span>
-                </label>
-                <label class="flex items-center space-x-3 border p-4 rounded cursor-pointer hover:border-orange-500">
-                    <input type="radio" name="payment" value="cash" class="hidden">
-                    <span class="w-5 h-5 border rounded-full flex items-center justify-center"></span>
-                    <span class="text-gray-700">Cash on Delivery</span>
-                </label>
+            <!-- STEP 4: CONFIRM -->
+            <div x-show="step === 4">
+                <h2 class="text-xl font-bold mb-4">Confirm Booking</h2>
+                <p class="mb-4 text-gray-700">Your booking is ready to confirm. Click below to finalize.</p>
+                <div class="flex justify-between mt-6">
+                    <button type="button" class="bg-gray-300 text-gray-700 px-5 py-2 rounded"
+                        @click="step = 3">Back</button>
+                    <button type="submit" class="bg-green-500 text-white px-5 py-2 rounded">
+                        Confirm & Book
+                    </button>
+                </div>
             </div>
-            <div class="flex justify-between mt-6">
-                <button type="button" class="bg-gray-300 text-gray-700 px-5 py-2 rounded"
-                    @click="step = 2">Back</button>
-                <button type="button" class="bg-orange-500 text-white px-5 py-2 rounded"
-                    @click="step = 4">Continue</button>
-            </div>
-        </div>
-
-        <!-- STEP 4: CONFIRM -->
-        <div x-show="step === 4">
-            <h2 class="text-xl font-bold mb-4">Confirm Booking</h2>
-            <p class="mb-4 text-gray-700">Your booking is ready to confirm. Click below to finalize.</p>
-            <div class="flex justify-between mt-6">
-                <button type="button" class="bg-gray-300 text-gray-700 px-5 py-2 rounded"
-                    @click="step = 3">Back</button>
-                <button type="submit" class="bg-green-500 text-white px-5 py-2 rounded">
-                    Confirm & Book
-                </button>
-            </div>
-        </div>
+        </form>
     </div>
 </div>
+
 @endsection

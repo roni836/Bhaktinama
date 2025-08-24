@@ -34,8 +34,8 @@ Route::get('/booking', [ServiceController::class, 'createBooking'])->name('booki
 Route::post('/booking', [ServiceController::class, 'bookService'])->name('booking');
 Route::get('/select-pandits', [ServiceController::class, 'index'])->name('select-pandits');
 Route::get('/select-pandit/{id}', [ServiceController::class, 'show'])->name('select-pandit');
-Route::get('/service-booking', [ServiceController::class, 'bookingShow'])->name('service-booking');
-Route::post('/service-booking', [ServiceController::class, 'submit'])->name('booking.submit');
+Route::get('/service-booking/{id}', [ServiceController::class, 'bookingShow'])->name('service-booking');
+Route::post('/service-booking', [ServiceController::class, 'submit'])->name('service-booking.submit');
 
 
 

@@ -199,55 +199,51 @@ class ServiceController extends Controller
     // }
     // // app/Http/Controllers/BookingSingleController.php
 
-    public function bookingShow()
+    public function bookingShow($id)
     {
         $pandits = Pandit::with('user')
             ->get();
+        $service = Service::findOrFail($id);
 
-        return view('service-booking', compact('pandits'));
+        return view('service-booking', compact('pandits', 'service'));
     }
 
     public function submit(Request $request)
     {
         $request->validate([
-            'full_name'       => 'required|string|max:255',
-            'email'           => 'required|email',
-            'phone'           => 'required|string|max:15',
-            'street'          => 'required|string',
+            'service_id'      => 'required|exists:services,id',
+            'ceremony_date'   => 'required|date',
+            'ceremony_time'   => ['required', 'regex:/^\d{1,2}(am|pm)\s*-\s*\d{1,2}(am|pm)$/i'],
+            'street_address'  => 'required|string',
             'city'            => 'required|string',
             'state'           => 'required|string',
             'zip'             => 'required|string',
-            'ceremony_date'   => 'required|date',
-            'ceremony_time'   => 'required|string',
-            'language'        => 'required|string',
-            'pandit_id'       => 'required|exists:pandits,id',
+            'landmark'        => 'nullable|string',
+            'language'       => 'required|in:hindi,english',
             'payment_method'  => 'required|in:online,cash',
         ]);
 
         $booking = Booking::create([
-            'full_name'        => $request->full_name,
-            'email'            => $request->email,
-            'phone'            => $request->phone,
-            'address'          => $request->street,
+            'user_id'          => auth()->id(),  // from logged-in user
+            'service_id'       => $request->service_id,
+            'ceremony_date'    => $request->ceremony_date,
+            'ceremony_time'    => $request->ceremony_time,
+            'street_address'   => $request->street_address,
             'city'             => $request->city,
             'state'            => $request->state,
             'zip'              => $request->zip,
             'landmark'         => $request->landmark,
             'special_requests' => $request->special_requests,
-            'ceremony_date'    => $request->ceremony_date,
-            'ceremony_time'    => $request->ceremony_time,
             'language'         => $request->language,
-            'pandit_id'        => $request->pandit_id,
-            'payment_method'   => $request->payment_method,
-            'status'           => 'pending'
+            'status'           => 'pending',
+            'payment_status'   => 'pending',
         ]);
 
-        // ✅ If payment is online, redirect to payment gateway
         if ($request->payment_method === 'online') {
             return redirect()->route('payment.gateway', $booking->id);
         }
 
-        return redirect()->route('booking.submit', $booking->id)
+        return redirect()->route('service-booking', $booking->id)
             ->with('success', 'Booking successfully created!');
     }
 }
