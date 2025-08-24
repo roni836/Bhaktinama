@@ -11,6 +11,7 @@ use App\Models\Pandit;
 use App\Models\Product;
 use App\Models\ProductCategory;
 use App\Models\Service;
+use Illuminate\Support\Str;
 use App\Models\Temple;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -149,7 +150,8 @@ class AdminController extends Controller
             'email'          => 'required|email|unique:users,email',
             'phone'          => 'nullable|string|max:15',
             'password'       => 'required|min:6|confirmed',
-            'specialization' => 'nullable|string',
+            'specialization' => 'nullable|array',  // Change here
+            'specialization.*' => 'string|max:255',
             'location'       => 'nullable|string',
             'bio'            => 'nullable|string',
             'profile_image'  => 'nullable|image|mimes:jpg,png,jpeg|max:2048',
@@ -167,7 +169,7 @@ class AdminController extends Controller
             'phone'          => $request->phone,
             'password'       => Hash::make('password'),
             'role'           => 'pandit',
-            'specialization' => $request->specialization,
+            'specializations' => $request->specializations ? json_encode($request->specializations) : null, // ✅ Convert to JSON
             'location'       => $request->location,
             'bio'            => $request->bio,
             'is_verified'    => true,
@@ -425,6 +427,7 @@ class AdminController extends Controller
         }
 
         $data = $validator->validated();
+        $data['slug'] = Str::slug($data['name']);
 
         // Handle image upload
         if ($request->hasFile('image')) {

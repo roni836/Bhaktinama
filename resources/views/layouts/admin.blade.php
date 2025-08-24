@@ -94,7 +94,7 @@
 
                         <a href="{{ url('/admin/contacts') }}"
                             class="{{ request()->is('admin/contacts') ? 'text-[#FF6B00] font-semibold' : 'hover:text-[#FF6B00]' }}">
-                            Contacts 
+                            Contacts
                         </a>
                     </nav>
 
@@ -106,8 +106,23 @@
                             <i class="fas fa-search mr-2 text-[#FF6B00]"></i> Search
                         </button>
 
-                        <!-- Right Logo -->
-                        <img src="/your-logo.png" alt="Logo" class="h-8 w-8">
+                        <div class="relative" x-data="{ open: false }">
+                            <!-- Profile Image -->
+                            <img src="/your-logo.png" alt="Logo"
+                                class="h-8 w-8 rounded-full cursor-pointer"
+                                @click="open = !open">
+
+                            <!-- Dropdown Menu -->
+                            <div x-show="open" @click.outside="open = false"
+                                x-transition
+                                class="absolute right-0 mt-2 w-40 bg-white shadow-lg rounded-md border border-gray-200 z-50">
+                                <a href="/profile" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">My Profile</a>
+                                <form method="POST" action="/logout">
+                                    @csrf
+                                    <button type="submit" class="block w-full text-left px-4 py-2 text-red-500 hover:bg-gray-100">Logout</button>
+                                </form>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </header>
@@ -133,6 +148,9 @@
     </div>
 
     @yield('scripts')
+
+    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+
 </body>
 
 </html>
