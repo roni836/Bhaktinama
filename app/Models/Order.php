@@ -8,24 +8,22 @@ use Illuminate\Database\Eloquent\Model;
 class Order extends Model
 {
     use HasFactory;
-    
-    protected $fillable = [
-        'user_id',
-        'product_id',
-        'quantity',
-        'price',
-        'status',
-        'payment_status',
-        'payment_method',
-        'shipping_address',
-        'order_notes'
-    ];
 
+    protected $guarded = [];
+
+    protected $casts = [
+        'shipping_address' => 'array',
+    ];
     public function user()
     {
         return $this->belongsTo(User::class);
     }
-    
+     public function items()
+    {
+        return $this->hasMany(OrderItem::class);
+    }
+
+
     /**
      * Get the product associated with the order
      * Note: You'll need to create a Product model if it doesn't exist

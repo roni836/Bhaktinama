@@ -38,6 +38,20 @@ Route::get('/service-booking/{id}', [ServiceController::class, 'bookingShow'])->
 Route::post('/service-booking', [ServiceController::class, 'submit'])->name('service-booking.submit');
 
 
+Route::get('/my-cart', [UserController::class, 'cartIndex'])->name('my-cart');
+Route::post('/cart/add', [UserController::class, 'addToCart'])->name('cart.add');
+Route::post('/cart/update-quantity', [UserController::class, 'updateCartQuantity'])->name('cart.updateQuantity');
+Route::post('/cart/remove-item', [UserController::class, 'removeCartItem'])->name('cart.removeItem');
+Route::post('/cart/apply-coupon', [UserController::class, 'applyCartCoupon'])->name('cart.applyCoupon');
+Route::get('/checkout', [UserController::class, 'checkout'])->name('checkout');
+Route::post('/checkout', [UserController::class, 'processCheckout'])->name('checkout.process');
+Route::post('/order/place', [UserController::class, 'place'])->name('order.place');
+Route::get('/order/confirmation/{id}', [UserController::class, 'orderConfirmation'])->name('order.confirmation');
+
+
+
+
+
 
 // Pandit Dashboard Routes (Protected)
 
