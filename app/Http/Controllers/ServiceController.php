@@ -6,6 +6,7 @@ use App\Models\Booking;
 use App\Models\Location;
 use App\Models\Pandit;
 use App\Models\Service;
+use Illuminate\Support\Str;
 use App\Models\ServiceCategory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
@@ -87,6 +88,9 @@ class ServiceController extends Controller
         }
 
         $data = $request->except(['packages', 'faqs']);
+        $slug = Str::slug($request->title);
+        $count = Service::where('slug', 'like', "{$slug}%")->count();
+        $data['slug'] = $count ? "{$slug}-{$count}" : $slug;
 
 
         // Handle multiple image uploads
@@ -137,60 +141,113 @@ class ServiceController extends Controller
     {
         return view('service-booking');
     }
-    public function bookService(Request $request)
+    // public function bookService(Request $request)
+    // {
+    //     $request->validate([
+    //         'full_name'        => 'required|string|max:255',
+    //         'email'            => 'required|email',
+    //         'phone'            => 'required|string|max:20',
+    //         'street'           => 'required|string|max:255',
+    //         'city'             => 'required|string|max:100',
+    //         'state'            => 'required|string|max:100',
+    //         'zip'              => 'required|string|max:20',
+    //         'landmark'         => 'nullable|string|max:255',
+    //         'ceremony_date'    => 'required|date',
+    //         'ceremony_time'    => 'required',
+    //         'language'         => 'required|in:hindi,english',
+    //     ]);
+
+    //     $address = [
+    //         'street'   => $request->street,
+    //         'city'     => $request->city,
+    //         'state'    => $request->state,
+    //         'zip'      => $request->zip,
+    //         'landmark' => $request->landmark,
+    //     ];
+
+    //     Booking::create([
+    //         'booking_data' => $request->only([
+    //             'user_id'          => auth()->id(),
+    //             'service_id'       => $request->service_id,
+    //             'ceremony_date'    => $request->ceremony_date,
+    //             'ceremony_time'    => $request->ceremony_time,
+    //             'address'          => json_encode($address),
+    //             'special_requests' => $request->special_requests,
+    //             'language'         => $request->language,
+    //         ])
+    //     ]);
+
+    //     return redirect()->route('booking.create')->with('success', 'Booking created successfully!');
+    // }
+    // public function selectPandit()
+    // {
+    //     $pandits = Pandit::where('is_active', true)->get(); // Example
+    //     return view('service-booking-step2', compact('pandits'));
+    // }
+    // public function index()
+    // {
+    //     // Fetch all pandits from DB
+    //     $pandits = Pandit::all();
+
+    //     return view('select-pandit', compact('pandits'));
+    // }
+
+    // public function show($id)
+    // {
+    //     $pandit = Pandit::findOrFail($id);
+    //     return view('select-pandit', compact('pandit'));
+    // }
+    // // app/Http/Controllers/BookingSingleController.php
+
+    public function bookingShow()
+    {
+        $pandits = Pandit::with('user')
+            ->get();
+
+        return view('service-booking', compact('pandits'));
+    }
+
+    public function submit(Request $request)
     {
         $request->validate([
-            'full_name'        => 'required|string|max:255',
-            'email'            => 'required|email',
-            'phone'            => 'required|string|max:20',
-            'street'           => 'required|string|max:255',
-            'city'             => 'required|string|max:100',
-            'state'            => 'required|string|max:100',
-            'zip'              => 'required|string|max:20',
-            'landmark'         => 'nullable|string|max:255',
-            'ceremony_date'    => 'required|date',
-            'ceremony_time'    => 'required',
-            'language'         => 'required|in:hindi,english',
+            'full_name'       => 'required|string|max:255',
+            'email'           => 'required|email',
+            'phone'           => 'required|string|max:15',
+            'street'          => 'required|string',
+            'city'            => 'required|string',
+            'state'           => 'required|string',
+            'zip'             => 'required|string',
+            'ceremony_date'   => 'required|date',
+            'ceremony_time'   => 'required|string',
+            'language'        => 'required|string',
+            'pandit_id'       => 'required|exists:pandits,id',
+            'payment_method'  => 'required|in:online,cash',
         ]);
 
-        $address = [
-            'street'   => $request->street,
-            'city'     => $request->city,
-            'state'    => $request->state,
-            'zip'      => $request->zip,
-            'landmark' => $request->landmark,
-        ];
-
-        Booking::create([
-            'booking_data' => $request->only([
-                'user_id'          => auth()->id(),
-                'service_id'       => $request->service_id,
-                'ceremony_date'    => $request->ceremony_date,
-                'ceremony_time'    => $request->ceremony_time,
-                'address'          => json_encode($address),
-                'special_requests' => $request->special_requests,
-                'language'         => $request->language,
-            ])
+        $booking = Booking::create([
+            'full_name'        => $request->full_name,
+            'email'            => $request->email,
+            'phone'            => $request->phone,
+            'address'          => $request->street,
+            'city'             => $request->city,
+            'state'            => $request->state,
+            'zip'              => $request->zip,
+            'landmark'         => $request->landmark,
+            'special_requests' => $request->special_requests,
+            'ceremony_date'    => $request->ceremony_date,
+            'ceremony_time'    => $request->ceremony_time,
+            'language'         => $request->language,
+            'pandit_id'        => $request->pandit_id,
+            'payment_method'   => $request->payment_method,
+            'status'           => 'pending'
         ]);
 
-        return redirect()->route('booking.create')->with('success', 'Booking created successfully!');
-    }
-    public function selectPandit()
-    {
-        $pandits = Pandit::where('is_active', true)->get(); // Example
-        return view('service-booking-step2', compact('pandits'));
-    }
-    public function index()
-    {
-        // Fetch all pandits from DB
-        $pandits = Pandit::all();
+        // ✅ If payment is online, redirect to payment gateway
+        if ($request->payment_method === 'online') {
+            return redirect()->route('payment.gateway', $booking->id);
+        }
 
-        return view('select-pandit', compact('pandits'));
-    }
-
-    public function show($id)
-    {
-        $pandit = Pandit::findOrFail($id);
-        return view('select-pandit', compact('pandit'));
+        return redirect()->route('booking.submit', $booking->id)
+            ->with('success', 'Booking successfully created!');
     }
 }

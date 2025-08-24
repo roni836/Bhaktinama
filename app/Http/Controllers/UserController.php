@@ -6,6 +6,7 @@ use App\Models\Booking;
 use App\Models\Contact;
 use App\Models\Order;
 use App\Models\Product;
+use App\Models\ProductCategory;
 use App\Models\Service;
 use App\Models\ServiceCategory;
 use App\Models\Temple;
@@ -31,8 +32,9 @@ class UserController extends Controller
     }
     public function shop()
     {
+        $data['categories'] = ProductCategory::all();
         $data['shop'] = Product::all();
-        return view("shop", $data, $data);
+        return view("shop", $data);
     }
     public function about()
     {

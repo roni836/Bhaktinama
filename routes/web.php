@@ -6,6 +6,7 @@ use App\Http\Controllers\PanditController;
 use App\Http\Controllers\ServiceController;
 
 use App\Http\Controllers\UserController;
+use App\Models\Service;
 use Illuminate\Support\Facades\Route;
 
 
@@ -29,10 +30,13 @@ Route::get('/service-single-view/{id}', [UserController::class, 'show'])->name('
 Route::get('/kundalini', [UserController::class, 'kundalini'])->name("kundalini");
 Route::get('/annaprashan', [UserController::class, 'annaprashan'])->name("annaprashan");
 Route::get('/aa', [UserController::class, 'aa'])->name("aa");
-Route::get('/service-booking', [ServiceController::class, 'createBooking'])->name('service-booking');
-Route::post('/service-booking', [ServiceController::class, 'bookService'])->name('service-booking');
-Route::get('/select-pandits', [serviceController::class, 'index'])->name('select-pandits');
-Route::get('/select-pandit/{id}', [serviceController::class, 'show'])->name('select-pandit');
+Route::get('/booking', [ServiceController::class, 'createBooking'])->name('booking');
+Route::post('/booking', [ServiceController::class, 'bookService'])->name('booking');
+Route::get('/select-pandits', [ServiceController::class, 'index'])->name('select-pandits');
+Route::get('/select-pandit/{id}', [ServiceController::class, 'show'])->name('select-pandit');
+Route::get('/service-booking', [ServiceController::class, 'bookingShow'])->name('service-booking');
+Route::post('/service-booking', [ServiceController::class, 'submit'])->name('booking.submit');
+
 
 
 // Pandit Dashboard Routes (Protected)

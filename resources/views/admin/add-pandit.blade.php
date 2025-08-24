@@ -65,12 +65,16 @@
                 <input type="email" name="email" placeholder="Enter the Email"
                     class="w-full border rounded-md px-4 py-2 focus:ring-2 focus:ring-orange-400 outline-none">
             </div>
-        
-
             <div>
-                <input type="text" name="specialization" placeholder="Enter the Specialization"
-                    class="w-full border rounded-md px-4 py-2 focus:ring-2 focus:ring-orange-400 outline-none">
+                <label for="specialization">Specializations</label>
+                <select name="specialization[]" multiple class="form-control">
+                    <option value="Vastu">Vastu</option>
+                    <option value="Marriage">Marriage</option>
+                    <option value="Puja">Puja</option>
+                    <option value="Griha Pravesh">Griha Pravesh</option>
+                </select>
             </div>
+
 
             <div>
                 <label for="location" class="block text-sm font-medium text-gray-700">Select State</label>

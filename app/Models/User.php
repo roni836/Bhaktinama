@@ -30,7 +30,11 @@ class User extends Authenticatable
         'is_verified',
         'is_active',
     ];
-    
+    protected $casts = [
+        'specializations' => 'array',
+    ];
+
+
 
     /**
      * The attributes that should be hidden for serialization.
@@ -54,5 +58,4 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
-    
 }

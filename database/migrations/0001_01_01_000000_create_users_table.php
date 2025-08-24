@@ -21,8 +21,7 @@ return new class extends Migration
             // Role handling
             $table->enum('role', ['admin', 'user', 'pandit'])->default('user');
 
-            // Role-specific data (optional)
-            $table->string('specialization')->nullable(); // Only for Pandit
+            $table->json('specializations')->nullable(); // Instead of specialization string
             $table->string('location')->nullable();       // User or Pandit
             $table->text('bio')->nullable();
             $table->string('profile_image')->nullable();

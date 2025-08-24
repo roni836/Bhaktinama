@@ -4,39 +4,25 @@
 
 @section('content')
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Our Shop - MyPoojaPandit</title>
-    <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <!-- Font Awesome for icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <style>
-        body {
-            font-family: 'Inter', sans-serif;
-        }
-        /* Custom gradient for buttons */
-        .btn-gradient {
-            background: linear-gradient(to right, #FF7B00, #FF9F00);
-        }
-        .text-gradient {
-            background: linear-gradient(to right, #FF7B00, #FF9F00);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-    </style>
-</head>
-<body class="bg-white text-gray-800">
+<style>
+    body {
+        font-family: 'Inter', sans-serif;
+    }
 
-    <!-- Header Section -->
-    <header class="bg-white shadow-sm">
-        
-    </header>
+    /* Custom gradient for buttons */
+    .btn-gradient {
+        background: linear-gradient(to right, #FF7B00, #FF9F00);
+    }
 
+    .text-gradient {
+        background: linear-gradient(to right, #FF7B00, #FF9F00);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+</style>
+
+
+<div class="bg-white text-gray-800">
     <!-- Shop Hero Section -->
     <section class="relative bg-cover bg-center h-[400px] flex items-center justify-center rounded-b-lg overflow-hidden" style="background-image: url('{{ asset('images/SHOP PUJA SAMAGARI.jpg') }}')">
         <div class="absolute inset-0 bg-black opacity-50 rounded-b-lg"></div>
@@ -53,94 +39,137 @@
     <!-- Shop by Category Section -->
     <section class="py-16 bg-white">
         <div class="container mx-auto px-4 text-center">
-            <div class="flex justify-between items-center mb-12">
+            <div class="flex justify-between items-center mb-12 w-full px-4">
                 <h2 class="text-3xl font-bold text-gradient">Shop by Category</h2>
-                <button class="bg-orange-500 hover:bg-orange-600 text-white font-semibold py-2 px-6 rounded-full shadow-lg transition duration-300 flex items-center space-x-2">
+                <button class="bg-orange-500 hover:bg-orange-600 text-white font-semibold py-2 px-6 rounded-full transition duration-300 flex items-center space-x-2">
                     <i class="fas fa-shopping-cart"></i>
                     <span>My Cart</span>
                 </button>
             </div>
+
             <p class="text-gray-600 mb-12">Browse our carefully curated collection of authentic puja essentials, each crafted with devotion and attention to detail</p>
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-                <!-- Category Card 1 -->
+                @foreach ($categories as $category)
                 <div class="bg-gray-100 rounded-lg shadow-md overflow-hidden transform transition duration-300 hover:scale-105">
-                    <img src="{{ asset('https://placehold.co/400x300/FFDDC1/FF7B00?text=Thali') }}" alt="Puja Thali Sets" class="w-full h-48 object-cover rounded-t-lg">
+                    <img src="{{ asset($category->image) }}" alt="{{ $category->name }}" class="w-full h-48 object-cover rounded-t-lg">
                     <div class="p-4">
-                        <h3 class="text-lg font-semibold">Puja Thali Sets</h3>
+                        <h3 class="text-lg font-semibold">{{ $category->name }}</h3>
                     </div>
                 </div>
-                <!-- Category Card 2 -->
-                <div class="bg-gray-100 rounded-lg shadow-md overflow-hidden transform transition duration-300 hover:scale-105">
-                    <img src="{{ asset('https://placehold.co/400x300/FFDDC1/FF7B00?text=Diyas') }}" alt="Diyas & Lamps" class="w-full h-48 object-cover rounded-t-lg">
-                    <div class="p-4">
-                        <h3 class="text-lg font-semibold">Diyas & Lamps</h3>
-                    </div>
-                </div>
-                <!-- Category Card 3 -->
-                <div class="bg-gray-100 rounded-lg shadow-md overflow-hidden transform transition duration-300 hover:scale-105">
-                    <img src="{{ asset('https://placehold.co/400x300/FFDDC1/FF7B00?text=Incense') }}" alt="Incense & Fragrances" class="w-full h-48 object-cover rounded-t-lg">
-                    <div class="p-4">
-                        <h3 class="text-lg font-semibold">Incense & Fragrances</h3>
-                    </div>
-                </div>
-                <!-- Category Card 4 -->
-                <div class="bg-gray-100 rounded-lg shadow-md overflow-hidden transform transition duration-300 hover:scale-105">
-                    <img src="{{ asset('https://placehold.co/400x300/FFDDC1/FF7B00?text=Idols') }}" alt="Religious Idols" class="w-full h-48 object-cover rounded-t-lg">
-                    <div class="p-4">
-                        <h3 class="text-lg font-semibold">Religious Idols</h3>
-                    </div>
-                </div>
+                @endforeach
             </div>
+
         </div>
     </section>
-
-    <!-- Featured Products Section -->
     <section class="py-16 bg-gray-50">
         <div class="container mx-auto px-4 text-center">
             <h2 class="text-3xl font-bold mb-12 text-gradient">Featured Products</h2>
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
 
-            @foreach($shop as $item)
-                <!-- Product Card 1: Brass Puja Thali Set -->
+                @foreach($shop as $item)
                 <div class="bg-white rounded-lg shadow-md overflow-hidden transform transition duration-300 hover:scale-105">
                     <img src="{{ asset('uploads/' . $item->image) }}" alt="Brass Puja Thali Set" class="w-full h-48 object-cover rounded-t-lg">
                     <div class="p-4 text-left">
                         <h3 class="text-lg font-semibold mb-1">{{$item->Name}}</h3>
                         <p class="text-gray-600 text-sm mb-2">{{$item->description}}</p>
-                        <div class="flex items-center mb-2">
+                        <div class="flex justify-between items-center mb-2">
                             <div class="flex text-yellow-500 text-sm mr-2">
                                 <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i>
-                            </div class>
-                            <span class="text-gray-500 text-sm">{{$item->stock_quantity}}</span>
+                            </div>
+                            <span class="text-gray-500 text-sm">{{$item->quantity}}Left</span>
                         </div>
-                        <p class="text-xl font-bold text-orange-600 mb-2">{{$item->price}}</p>
-                        <button class="w-full bg-orange-500 hover:bg-orange-600 text-white font-semibold py-2 rounded-full shadow-md transition duration-300">
+                        <p class="text-lg font-semibold text-orange-600 mb-2">INR {{$item->price}}</p>
+                        <button class="add-to-cart w-full bg-orange-500 hover:bg-orange-600 text-white font-semibold py-2 rounded-full shadow-md transition duration-300"
+                            data-id="{{ $item->id }}"
+                            data-name="{{ $item->Name }}"
+                            data-price="{{ $item->price }}"
+                            data-image="{{ asset('uploads/' . $item->image) }}"
+                            data-description="{{ $item->description }}">
                             Add to Cart
                         </button>
                     </div>
+
                 </div>
                 @endforeach
-               </div>
-               
             </div>
 
-            <!-- Pagination -->
-            <div class="flex justify-center items-center space-x-2 mt-12">
-                <button class="w-10 h-10 rounded-full bg-orange-500 text-white font-semibold flex items-center justify-center shadow-md">1</button>
-                <button class="w-10 h-10 rounded-full bg-gray-200 text-gray-700 hover:bg-gray-300 font-semibold flex items-center justify-center transition duration-300">2</button>
-                <button class="w-10 h-10 rounded-full bg-gray-200 text-gray-700 hover:bg-gray-300 font-semibold flex items-center justify-center transition duration-300">3</button>
-                <button class="w-10 h-10 rounded-full bg-gray-200 text-gray-700 hover:bg-gray-300 font-semibold flex items-center justify-center transition duration-300">4</button>
-                <button class="w-10 h-10 rounded-full bg-gray-200 text-gray-700 hover:bg-gray-300 font-semibold flex items-center justify-center transition duration-300">5</button>
-                <button class="w-10 h-10 rounded-full bg-gray-200 text-gray-700 hover:bg-gray-300 font-semibold flex items-center justify-center transition duration-300">6</button>
-                <button class="w-10 h-10 rounded-full bg-gray-200 text-gray-700 hover:bg-gray-300 font-semibold flex items-center justify-center transition duration-300">
-                    <i class="fas fa-arrow-right"></i>
-                </button>
-            </div>
         </div>
-    </section>
 
-    <!-- Footer Section (reused from previous page) -->
-  
-</body>
-</html>
+        <div class="flex justify-center items-center space-x-2 mt-12">
+            <button class="w-10 h-10 rounded-full bg-orange-500 text-white font-semibold flex items-center justify-center shadow-md">1</button>
+            <button class="w-10 h-10 rounded-full bg-gray-200 text-gray-700 hover:bg-gray-300 font-semibold flex items-center justify-center transition duration-300">2</button>
+            <button class="w-10 h-10 rounded-full bg-gray-200 text-gray-700 hover:bg-gray-300 font-semibold flex items-center justify-center transition duration-300">3</button>
+            <button class="w-10 h-10 rounded-full bg-gray-200 text-gray-700 hover:bg-gray-300 font-semibold flex items-center justify-center transition duration-300">4</button>
+            <button class="w-10 h-10 rounded-full bg-gray-200 text-gray-700 hover:bg-gray-300 font-semibold flex items-center justify-center transition duration-300">5</button>
+            <button class="w-10 h-10 rounded-full bg-gray-200 text-gray-700 hover:bg-gray-300 font-semibold flex items-center justify-center transition duration-300">6</button>
+            <button class="w-10 h-10 rounded-full bg-gray-200 text-gray-700 hover:bg-gray-300 font-semibold flex items-center justify-center transition duration-300">
+                <i class="fas fa-arrow-right"></i>
+            </button>
+        </div>
+</div>
+</section>
+<!-- Modal Background -->
+<div id="productModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+    <div class="bg-white rounded-lg shadow-lg max-w-lg w-full p-6 relative overflow-y-auto max-h-[90vh]">
+
+        <!-- Close Button -->
+        <button id="closeModal" class="absolute top-2 right-2 text-gray-500 hover:text-gray-700 text-xl">✕</button>
+
+        <!-- Product Image -->
+        <img id="modalImage" class="w-full h-56 object-contain rounded mb-4" src="" alt="Product Image">
+
+        <!-- Product Title -->
+        <h2 id="modalName" class="text-2xl font-bold mb-2">Brass Puja Thali Set</h2>
+
+        <!-- Price -->
+        <p class="text-lg text-orange-500 font-semibold mb-4">₹ <span id="modalPrice">320</span></p>
+
+        <!-- Description -->
+        <p class="text-gray-600 text-sm mb-4">
+            Complete brass puja thali set featuring intricate traditional designs...
+        </p>
+
+        <!-- Quantity Selector -->
+        <div class="flex items-center space-x-4 mb-4">
+            <label for="quantity" class="text-gray-700 font-medium">Quantity:</label>
+            <input type="number" id="quantity" class="w-16 border rounded px-2 py-1 text-center" value="1" min="1">
+        </div>
+
+        <!-- Add to Cart Button -->
+        <button class="w-full bg-orange-500 hover:bg-orange-600 text-white py-3 rounded-lg text-lg font-semibold">
+            🛒 Add to Cart
+        </button>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const modal = document.getElementById('productModal');
+        const closeModal = document.getElementById('closeModal');
+        const modalImage = document.getElementById('modalImage');
+        const modalName = document.getElementById('modalName');
+        const modalPrice = document.getElementById('modalPrice');
+
+        document.querySelectorAll('.add-to-cart').forEach(button => {
+            button.addEventListener('click', function() {
+                const id = this.dataset.id; // Get the clicked item ID
+                console.log("Clicked product ID:", id);
+
+                // Set modal data from dataset
+                modalImage.src = this.dataset.image;
+                modalName.textContent = this.dataset.name;
+                modalPrice.textContent = this.dataset.price;
+
+                modal.classList.remove('hidden');
+            });
+        });
+
+        closeModal.addEventListener('click', () => modal.classList.add('hidden'));
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) modal.classList.add('hidden');
+        });
+    });
+</script>
+
+
 @endsection

@@ -11,6 +11,7 @@ return new class extends Migration
         Schema::create('services', function (Blueprint $table) {
             $table->id();
             $table->string('title');
+            $table->string('slug')->unique();
             $table->foreignId('service_category_id')->constrained('service_categories')->onDelete('cascade');
             $table->foreignId('location_id')->nullable()->constrained('locations')->onDelete('set null');
             $table->longText('description');
